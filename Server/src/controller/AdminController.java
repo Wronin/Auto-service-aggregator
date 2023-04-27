@@ -55,9 +55,9 @@ public class AdminController {
         return adminService.getCurrentAdminRequest(serviceAdmin, id);
     }
 
-    public void acceptRequest(String login, String password, int id) {
+    public void acceptRequestForAdmin(String login, String password, int id) {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
-        adminService.acceptRequest(serviceAdmin, id);
+        adminService.acceptRequestForAdmin(serviceAdmin, id);
     }
     public void createChat(String login, String password, String description, String brand, String model, String VINNumber, String regNumber, String status, int id) {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);

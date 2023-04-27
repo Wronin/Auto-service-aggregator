@@ -179,8 +179,8 @@ public class ClientController {
         }
     }
 
-    public void acceptRequest(String login, String password, int idAnswer) {
+    public void acceptRequestForClient(String login, String password, int idAnswer) {
         Client client = new Client(login, password);
-        clientService.acceptRequest(client, idAnswer);
+        clientService.acceptRequestForClient(client, idAnswer);
     }
 }

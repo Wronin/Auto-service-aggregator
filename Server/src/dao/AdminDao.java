@@ -36,13 +36,13 @@ public class AdminDao {
         ArrayList<Request> requests = new ArrayList<>();
         try {
             resultSet = statement.executeQuery("select " +
-                    "request.idrequest, request.description, model.Name, brand.Name, auto.reg_number, auto.vin, request.status " +
+                    "request.idRequest, request.description, model.Name, brand.Name, auto.reg_number, auto.vin, request.status " +
                     "from request " +
                     "join client on client.idClient = request.client_idclient " +
                     "join auto on client.auto_idAuto = auto.idauto " +
                     "join model on auto.model_idModel = model.idmodel " +
                     "join brand on model.brand_idBrand = brand.idbrand " +
-                    "where request.auto_service_idAuto_service is NULL ");
+                    "where request.auto_service_idAuto_service is NULL;");
 
             while (resultSet.next()) {
                 Status status = switch (resultSet.getString("request.status")) {
@@ -72,7 +72,7 @@ public class AdminDao {
         return requests;
     }
 
-    public void acceptRequest(ServiceAdmin serviceAdmin, int id) {
+    public void acceptRequestForAdmin(ServiceAdmin serviceAdmin, int id) {
         try {
             int idAuto_Service = 0;
 

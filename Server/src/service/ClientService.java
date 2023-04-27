@@ -44,7 +44,7 @@ public class ClientService {
     }
 
     public CarService getCarServiceByName(String name) {
-        ArrayList<CarService> carServices = clientDao.getCarServices(name);
+        ArrayList<CarService> carServices = clientDao.getCarServices();
 
         for (CarService carService : carServices) {
             if (carService.getName().equals(name)) {
@@ -53,7 +53,7 @@ public class ClientService {
         }
         return new CarService();
     }
-    public void acceptRequest(Client client, int idAnswer) {
-        clientDao.acceptRequest(client, idAnswer);
+    public void acceptRequestForClient(Client client, int idAnswer) {
+        clientDao.acceptRequestForClient(client, idAnswer);
     }
 }

@@ -21,27 +21,40 @@ public class ClientDao {
 
     public void addCar(Client client, Car car) {
         try {
-            String idModel = null, idAuto = null;
+            int idAccount = 0, idModel = 0, idClient = 0;
 
-            resultSet = statement.executeQuery("select model.idModel, model.Name, Brand.Name from Model join Brand on Model.Brand_idBrand = Brand.idBrand");
+            resultSet = statement.executeQuery("select " +
+                    "model.idModel, model.Name, Brand.Name " +
+                    "from Model " +
+                    "join Brand on Model.Brand_idBrand = Brand.idBrand");
+
             while (resultSet.next()) {
-                System.out.println(resultSet.getString("model.Name") + " " + resultSet.getString("Brand.Name"));
                 if (resultSet.getString("model.Name").equals(car.getModel()) && resultSet.getString("brand.Name").equals(car.getBrand()))
-                    idModel = resultSet.getString("model.idModel");
+                    idModel = resultSet.getInt("model.idModel");
             }
 
-            String sql;
+            resultSet = statement.executeQuery("select account.id " +
+                    "from account where account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
-            sql = "insert into auto values(last_insert_id(), '" + car.getVINNumber() + "', '" + car.getRegNumber() + "', " + idModel + ");";
-            statement.executeUpdate(sql);
-
-            resultSet = statement.executeQuery("select * from auto;");
             while (resultSet.next()) {
-                if (resultSet.getString("VIN").equals(car.getVINNumber()))
-                    idAuto = resultSet.getString("idAuto");
+                idAccount = resultSet.getInt("id");
             }
 
-            sql = "insert into client values(last_insert_id(), '" + client.getLogin() + "', '" + client.getPassword() + "', " + idAuto + ");";
+            statement.executeUpdate("insert into client (`account_id`) values('" + idAccount + "');");
+
+            resultSet = statement.executeQuery("select " +
+                    "client.idClient " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "where " +
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+
+            while (resultSet.next()) {
+                idClient = resultSet.getInt("idClient");
+            }
+
+            String sql = "insert into auto (`vin`, `reg_number`, `model_idModel`, `client_idClient`) " +
+                    "values('" + car.getVINNumber() + "', '" + car.getRegNumber() + "', '" + idModel + "', '" + idClient + "');";
             statement.executeUpdate(sql);
 
         } catch (Exception e) {
@@ -52,13 +65,16 @@ public class ClientDao {
     public ArrayList<Car> getCarList(Client client) {
         ArrayList<Car> cars = new ArrayList<>();
         try {
+
             resultSet = statement.executeQuery("select " +
-                    "brand.name, model.name, auto.reg_number, auto.vin, client.login, auto.reg_number " +
-                    "from client " +
-                    "join auto on client.auto_idAuto = auto.idAuto " +
+                    "auto.vin, auto.reg_number, brand.name, model.name " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join auto on client.idClient = auto.client_idClient " +
                     "join model on auto.model_idModel = model.idModel " +
-                    "join brand on model.Brand_idBrand = brand.idBrand " +
-                    "where client.Login = '" + client.getLogin() + "' and client.Password = '" + client.getPassword() + "';");
+                    "join brand on model.brand_idBrand = brand.idBrand " +
+                    "where " +
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
                 cars.add(new Car(resultSet.getString("auto.vin"),
@@ -78,18 +94,16 @@ public class ClientDao {
         try {
             String client_idClient = null;
             resultSet = statement.executeQuery("select " +
-                    "client.idClient, client.Login, client.Password, Model.Name, Brand.Name, client.Auto_idAuto, auto.vin " +
-                    "from Client " +
-                    "join Auto on client.Auto_idAuto = Auto.idAuto " +
-                    "join Model on Auto.Model_idModel = Model.idModel " +
-                    "join Brand on Model.Brand_idBrand = Brand.idBrand "  +
+                    "client.idClient, auto.vin " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join auto on client.idClient = auto.client_idClient " +
+                    "join model on auto.model_idModel = model.idModel " +
+                    "join brand on model.brand_idBrand = brand.idBrand " +
                     "where " +
-                    "client.Login = '" + client.getLogin() + "' and client.Password = '" + client.getPassword() + "';");
+                    "account.Login = '" + client.getLogin() + "' and account.Password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
-                System.out.println(resultSet.getString("model.name") + " "
-                        + resultSet.getString("brand.name") + " "
-                        + resultSet.getString("client.Auto_idAuto"));
                 if (resultSet.getString("auto.vin").equals(request.getCar().getVINNumber()))
                     client_idClient = resultSet.getString("client.idClient");
             }
@@ -107,16 +121,17 @@ public class ClientDao {
 
         try {
             resultSet = statement.executeQuery("select " +
-                    "request.idRequest, auto.Reg_number, request.Description, auto_service.login, request.Status " +
-                    "from Request " +
-                    "join client on client.idClient = request.Client_idClient " +
+                    "request.idRequest, auto.Reg_number, request.Description, auto_service.name, request.Status " +
+                    "from account " +
+                    "join client on client.account_id = account.id " +
                     "join auto on client.auto_idAuto = auto.idAuto " +
+                    "join request on request.client_idClient = client.idClient " +
                     "left join auto_service on request.auto_service_idAuto_service = idAuto_service " +
                     "where " +
-                    "client.login = '" + client.getLogin() + "' and client.password = '" + client.getPassword() + "';");
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
-                requests.add(new RequestForClient(Integer.parseInt(resultSet.getString("request.idRequest")), resultSet.getString("auto.reg_number"), resultSet.getString("request.description"), resultSet.getString("auto_service.login"), resultSet.getString("request.status")));
+                requests.add(new RequestForClient(Integer.parseInt(resultSet.getString("request.idRequest")), resultSet.getString("auto.reg_number"), resultSet.getString("request.description"), resultSet.getString("auto_service.name"), resultSet.getString("request.status")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,17 +145,18 @@ public class ClientDao {
 
         try {
             resultSet = statement.executeQuery("select " +
-                    "answer.idAnswer, auto.Reg_number, Auto_service.login, answer.Status " +
+                    "answer.idAnswer, auto.Reg_number, Auto_service.name, answer.Status " +
                     "from answer " +
                     "join request on request.idRequest = answer.request_idRequest " +
-                    "join client on client.idClient = request.Client_idClient " +
-                    "join auto on client.auto_idAuto = auto.idAuto " +
                     "join auto_service on answer.auto_service_idAuto_service = auto_service.idAuto_service " +
+                    "join client on client.idClient = request.client_idClient " +
+                    "join auto on client.auto_idAuto = auto.idAuto " +
+                    "join account on account.id = client.account_id " +
                     "where " +
-                    "client.login = '" + client.getLogin() + "' and client.password = '" + client.getPassword() + "';");
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
-                answers.add(new AnswerAutoService(Integer.parseInt(resultSet.getString("idAnswer")), resultSet.getString("reg_number"), resultSet.getString("login"), resultSet.getString("status")));
+                answers.add(new AnswerAutoService(Integer.parseInt(resultSet.getString("idAnswer")), resultSet.getString("reg_number"), resultSet.getString("Name"), resultSet.getString("status")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -148,13 +164,13 @@ public class ClientDao {
         return answers;
     }
 
-    public ArrayList<CarService> getCarServices(String name) {
+    public ArrayList<CarService> getCarServices() {
         ArrayList<CarService> carServices = new ArrayList<>();
 
         try {
             resultSet = statement.executeQuery("select * from auto_Service");
             while (resultSet.next()) {
-                carServices.add(new CarService(resultSet.getNString("login"), resultSet.getString("description")));
+                carServices.add(new CarService(resultSet.getNString("Name"), resultSet.getString("description")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,29 +178,19 @@ public class ClientDao {
         return carServices;
     }
 
-    public void acceptRequest(Client client, int idAnswer) {
+    public void acceptRequestForClient(Client client, int idAnswer) {
         try {
             int auto_service_idAuto_service = 0, idRequest = 0, idClient = 0;
-//            resultSet = statement.executeQuery("select " +
-//                    "answer.auto_service_idAuto_service " +
-//                    "from answer " +
-//                    "join request on request.idRequest = answer.request_idRequest " +
-//                    "join client on client.idClient = request.client_idClient " +
-//                    "where " +
-//                    "client.login = '" + client.getLogin() + "' and client.password = '" + client.getPassword() + "';");
-//            while (resultSet.next()) {
-//                if (resultSet.getInt("answer.auto_service_idAuto_service") ==  idAnswer) {
-//                    auto_service_idAuto_service = resultSet.getInt("answer.auto_service_idAuto_service");
-//                }
-//            }
 
             resultSet = statement.executeQuery("select " +
                     "answer.idAnswer, answer.Request_idRequest, answer.Auto_Service_idAuto_Service, request.idRequest, client.idClient " +
                     "from answer " +
                     "join request on request.idRequest = answer.request_idRequest " +
                     "join client on client.idClient = request.client_idClient " +
+                    "join account on account.id = client.account_id " +
                     "where " +
-                    "client.login = '" + client.getLogin() + "' and client.password = '" + client.getPassword() + "';");
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+
             while (resultSet.next()) {
                 if (Integer.parseInt(resultSet.getString("answer.idAnswer")) == idAnswer) {
                     idRequest = Integer.parseInt(resultSet.getString("answer.request_idRequest"));
@@ -192,8 +198,47 @@ public class ClientDao {
                     auto_service_idAuto_service = Integer.parseInt(resultSet.getString("answer.auto_service_idAuto_service"));
                 }
             }
+
             String sql = "update request set auto_service_idAuto_service = '" + auto_service_idAuto_service + "', status = " + "'Accept'" + " where (idRequest = '" + idRequest + "' and client_idClient = '" + idClient + "');";
             statement.executeUpdate(sql);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createChat(Client client, int id) {
+        try {
+            int idAutoService = 0, idClient = 0;
+            resultSet = statement.executeQuery("select " +
+                    "auto_service.idAuto_service " +
+                    "from account " +
+                    "join client on client.account_id = account.id " +
+                    "join request on request.Client_idClient = client.idClient " +
+                    "join answer on answer.request_idRequest = request.idRequest " +
+                    "join auto_service on answer.auto_service_idAuto_service = auto_service.idAuto_service " +
+                    "where " +
+                    "answer.idAnswer = '" + id + "' and account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+
+            while (resultSet.next()) {
+                idAutoService = resultSet.getInt("idAnswer");
+            }
+
+            resultSet = statement.executeQuery("select " +
+                    "client.idClient " +
+                    "from account " +
+                    "join client on client.account_id = account.id " +
+                    "join request on request.Client_idClient = client.idClient " +
+                    "join answer on answer.request_idRequest = request.idRequest " +
+                    "where " +
+                    "answer.idAnswer = '" + id + "' and account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+
+            while (resultSet.next()) {
+                idClient = resultSet.getInt("idClient");
+            }
+
+            statement.executeUpdate("insert into chat(idChat, client_idClient, auto_service_idAuto_service) " +
+                    "values (last_insert_id(), '" + idClient + "', '" + idAutoService + "');");
 
         } catch (Exception e) {
             e.printStackTrace();

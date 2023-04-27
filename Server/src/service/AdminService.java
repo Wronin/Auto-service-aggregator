@@ -25,8 +25,8 @@ public class AdminService {
         return new Request();
     }
 
-    public void acceptRequest(ServiceAdmin serviceAdmin, int id) {
-        adminDao.acceptRequest(serviceAdmin, id);
+    public void acceptRequestForAdmin(ServiceAdmin serviceAdmin, int id) {
+        adminDao.acceptRequestForAdmin(serviceAdmin, id);
     }
 
     public void createChat(ServiceAdmin serviceAdmin, Request request) {

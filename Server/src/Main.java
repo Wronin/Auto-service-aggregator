@@ -13,6 +13,7 @@ public class Main {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
 
+        clientController.addRequest("log", "pas", "need help", "BMW", "X1", "VIN", "RegNum");
         try {
             ServerSocket serverSocket = new ServerSocket(3030);
             Socket socket = serverSocket.accept();
@@ -42,30 +43,85 @@ public class Main {
                             (String) jsonObject.get("regNumber")
                     );
                     case "getCarList" ->
-                            clientController.getCarList(socket, (String) jsonObject.get("login"), (String) jsonObject.get("password"));
+                            clientController.getCarList(
+                                    socket,
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password")
+                            );
                     case "getCarNumbers" ->
-                            clientController.getCarNumbers(socket, (String) jsonObject.get("login"), (String) jsonObject.get("password"));
+                            clientController.getCarNumbers(
+                                    socket,
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password")
+                            );
                     case "getCar" ->
-                            clientController.getCar(socket, (String) jsonObject.get("login"), (String) jsonObject.get("password"), (String) jsonObject.get("regNumber"));
+                            clientController.getCar(
+                                    socket, (String) jsonObject.get("login")
+                                    , (String) jsonObject.get("password"),
+                                    (String) jsonObject.get("regNumber")
+                            );
                     case "addRequest" ->
-                            clientController.addRequest((String) jsonObject.get("login"), (String) jsonObject.get("password"), (String) jsonObject.get("description"), (String) jsonObject.get("brand"), (String) jsonObject.get("model"), (String) jsonObject.get("VINNumber"), (String) jsonObject.get("regNumber"));
+                            clientController.addRequest(
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
+                                    (String) jsonObject.get("description"),
+                                    (String) jsonObject.get("brand"),
+                                    (String) jsonObject.get("model"),
+                                    (String) jsonObject.get("VINNumber"),
+                                    (String) jsonObject.get("regNumber"));
                     case "getAllAdminRequest" ->
-                            adminController.getAllAdminRequest(socket, (String) jsonObject.get("login"), (String) jsonObject.get("password"));
+                            adminController.getAllAdminRequest(
+                                    socket,
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password")
+                            );
                     case "getCurrentRequest" ->
-                            adminController.getCurrentAdminRequest((String) jsonObject.get("login"), (String) jsonObject.get("password"), Integer.parseInt((String) jsonObject.get("id")));
+                            adminController.getCurrentAdminRequest(
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
+                                    Integer.parseInt((String) jsonObject.get("id"))
+                            );
                     case "createChat" ->
-                            adminController.createChat((String) jsonObject.get("login"), (String) jsonObject.get("password"), (String) jsonObject.get("description"), (String) jsonObject.get("brand"), (String) jsonObject.get("model"), (String) jsonObject.get("VINNumber"), (String) jsonObject.get("regNumber"), (String) jsonObject.get("status"), (Integer) jsonObject.get("id"));
+                            adminController.createChat(
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
+                                    (String) jsonObject.get("description"),
+                                    (String) jsonObject.get("brand"),
+                                    (String) jsonObject.get("model"),
+                                    (String) jsonObject.get("VINNumber"),
+                                    (String) jsonObject.get("regNumber"),
+                                    (String) jsonObject.get("status"),
+                                    (Integer) jsonObject.get("id"));
+                    case "acceptRequestForAdmin" ->
+                            adminController.acceptRequestForAdmin(
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
+                                    (Integer) jsonObject.get("id")
+                            );
                     case "getAllClientRequest" ->
-                            clientController.getAllClientRequest(socket, (String) jsonObject.get("login"), (String) jsonObject.get("password"));
+                            clientController.getAllClientRequest(
+                                    socket,
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password")
+                            );
                     case "getAnswerAutoService" ->
-                            clientController.getAnswerAutoService(socket, (String) jsonObject.get("login"), (String) jsonObject.get("password"));
+                            clientController.getAnswerAutoService(
+                                    socket, (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password")
+                            );
                     case "getCarServiceByName" ->
-                            clientController.getCarServiceByName(socket, (String) jsonObject.get("name"));
-                    case "acceptRequest" ->
-                            clientController.acceptRequest((String) jsonObject.get("login"), (String) jsonObject.get("password"), jsonObject.getInteger("idAnswer"));
+                            clientController.getCarServiceByName(
+                                    socket,
+                                    (String) jsonObject.get("name")
+                            );
+                    case "acceptRequestForClient" ->
+                            clientController.acceptRequestForClient(
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
+                                    jsonObject.getInteger("idAnswer")
+                            );
                     default -> throw new IllegalStateException("Unexpected value: " + jsonObject.get("func"));
                 }
-
             }
 
         } catch (Exception e) {
