@@ -1,5 +1,6 @@
 package dao;
 
+import com.mysql.cj.protocol.x.XMessage;
 import model.*;
 
 import java.sql.*;
@@ -111,6 +112,7 @@ public class ClientDao {
             String sql;
             sql = "insert into Request(idRequest, Description, Client_idClient, Status) values(last_insert_id(), '" + request.getDescription() + "', " + client_idClient + ", '" + request.getStatus() + "');";
             statement.executeUpdate(sql);
+
          } catch (Exception e) {
              e.printStackTrace();
          }
@@ -123,8 +125,8 @@ public class ClientDao {
             resultSet = statement.executeQuery("select " +
                     "request.idRequest, auto.Reg_number, request.Description, auto_service.name, request.Status " +
                     "from account " +
-                    "join client on client.account_id = account.id " +
-                    "join auto on client.auto_idAuto = auto.idAuto " +
+                    "join client on account.id = client.account_id " +
+                    "join auto on client.idClient = auto.client_idClient " +
                     "join request on request.client_idClient = client.idClient " +
                     "left join auto_service on request.auto_service_idAuto_service = idAuto_service " +
                     "where " +
@@ -150,7 +152,7 @@ public class ClientDao {
                     "join request on request.idRequest = answer.request_idRequest " +
                     "join auto_service on answer.auto_service_idAuto_service = auto_service.idAuto_service " +
                     "join client on client.idClient = request.client_idClient " +
-                    "join auto on client.auto_idAuto = auto.idAuto " +
+                    "join auto on client.idClient = auto.client_idClient " +
                     "join account on account.id = client.account_id " +
                     "where " +
                     "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
@@ -164,7 +166,7 @@ public class ClientDao {
         return answers;
     }
 
-    public ArrayList<CarService> getCarServices() {
+    public ArrayList<CarService> getCarServiceByName() {
         ArrayList<CarService> carServices = new ArrayList<>();
 
         try {
@@ -183,16 +185,16 @@ public class ClientDao {
             int auto_service_idAuto_service = 0, idRequest = 0, idClient = 0;
 
             resultSet = statement.executeQuery("select " +
-                    "answer.idAnswer, answer.Request_idRequest, answer.Auto_Service_idAuto_Service, request.idRequest, client.idClient " +
-                    "from answer " +
-                    "join request on request.idRequest = answer.request_idRequest " +
-                    "join client on client.idClient = request.client_idClient " +
-                    "join account on account.id = client.account_id " +
+                    "answer.idAnswer, answer.Request_idRequest, answer.Auto_Service_idAuto_Service, client.idClient " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join request on client.idClient = request.client_idClient " +
+                    "join answer on answer.request_idRequest = request.idRequest " +
                     "where " +
                     "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
-                if (Integer.parseInt(resultSet.getString("answer.idAnswer")) == idAnswer) {
+                if (resultSet.getInt("answer.idAnswer") == idAnswer) {
                     idRequest = Integer.parseInt(resultSet.getString("answer.request_idRequest"));
                     idClient = Integer.parseInt(resultSet.getString("client.idClient"));
                     auto_service_idAuto_service = Integer.parseInt(resultSet.getString("answer.auto_service_idAuto_service"));
@@ -221,7 +223,7 @@ public class ClientDao {
                     "answer.idAnswer = '" + id + "' and account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
-                idAutoService = resultSet.getInt("idAnswer");
+                idAutoService = resultSet.getInt("idAuto_service");
             }
 
             resultSet = statement.executeQuery("select " +
@@ -237,11 +239,45 @@ public class ClientDao {
                 idClient = resultSet.getInt("idClient");
             }
 
-            statement.executeUpdate("insert into chat(idChat, client_idClient, auto_service_idAuto_service) " +
-                    "values (last_insert_id(), '" + idClient + "', '" + idAutoService + "');");
+            statement.executeUpdate("insert into chat(client_idClient, auto_service_idAuto_service) " +
+                    "values ('" + idClient + "', '" + idAutoService + "');");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void sendClientMassage(Client client, int idChat, String message) {
+        try {
+
+            resultSet = statement.executeQuery("select " +
+                    "chat.idChat " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join chat on client.idClient = chat.client_idClient " +
+                    "where " +
+                    "account.login ='" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+
+            while (resultSet.next()) {
+                if (resultSet.getInt("idChat") == idChat) {
+                    statement.executeUpdate("insert into message (`text`, `chat_idChat`) values ('" + message + "', '" + idChat + "');");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Chat> getChats(Client client) {
+        ArrayList<Chat> chats = new ArrayList<>();
+
+        try {
+            resultSet = statement.executeQuery("select " +
+                    "");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return chats;
     }
 }

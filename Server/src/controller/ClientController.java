@@ -183,4 +183,9 @@ public class ClientController {
         Client client = new Client(login, password);
         clientService.acceptRequestForClient(client, idAnswer);
     }
+
+    public void sendClientMassage(String login, String password, int idChat, String message) {
+        Client client = new Client(login, password);
+        clientService.sendClientMassage(client, idChat, message);
+    }
 }

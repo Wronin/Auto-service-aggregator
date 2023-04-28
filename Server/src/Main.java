@@ -3,6 +3,7 @@ import controller.ClientController;
 import org.json.simple.JsonObject;
 import org.json.simple.Jsoner;
 
+import javax.naming.ldap.SortKey;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,7 +14,6 @@ public class Main {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
 
-        clientController.addRequest("log", "pas", "need help", "BMW", "X1", "VIN", "RegNum");
         try {
             ServerSocket serverSocket = new ServerSocket(3030);
             Socket socket = serverSocket.accept();
@@ -56,8 +56,9 @@ public class Main {
                             );
                     case "getCar" ->
                             clientController.getCar(
-                                    socket, (String) jsonObject.get("login")
-                                    , (String) jsonObject.get("password"),
+                                    socket,
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
                                     (String) jsonObject.get("regNumber")
                             );
                     case "addRequest" ->
@@ -68,7 +69,15 @@ public class Main {
                                     (String) jsonObject.get("brand"),
                                     (String) jsonObject.get("model"),
                                     (String) jsonObject.get("VINNumber"),
-                                    (String) jsonObject.get("regNumber"));
+                                    (String) jsonObject.get("regNumber")
+                            );
+                    case "sendClientMassage" ->
+                        clientController.sendClientMassage(
+                                (String) jsonObject.get("login"),
+                                (String) jsonObject.get("password"),
+                                (Integer) jsonObject.get("idChat"),
+                                (String) jsonObject.get("message")
+                        );
                     case "getAllAdminRequest" ->
                             adminController.getAllAdminRequest(
                                     socket,
@@ -91,7 +100,8 @@ public class Main {
                                     (String) jsonObject.get("VINNumber"),
                                     (String) jsonObject.get("regNumber"),
                                     (String) jsonObject.get("status"),
-                                    (Integer) jsonObject.get("id"));
+                                    (Integer) jsonObject.get("id")
+                            );
                     case "acceptRequestForAdmin" ->
                             adminController.acceptRequestForAdmin(
                                     (String) jsonObject.get("login"),
