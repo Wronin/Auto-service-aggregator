@@ -61,4 +61,20 @@ public class ClientService {
     public void sendClientMassage(Client client, int idChat, String message) {
         clientDao.sendClientMassage(client, idChat, message);
     }
+    public ArrayList<Chat> getChatsForClient(Client client) {
+        ArrayList<Chat> chats = clientDao.getChatsForClient(client);
+
+        for (Chat chat : chats) {
+            chat.setMessages(clientDao.getMessagesByChat(client, chat));
+        }
+
+        return clientDao.getChatsForClient(client);
+    }
+
+    public Chat getCurrentChatForClient(Client client, int idChat) {
+        Chat chat = clientDao.getCurrentChatForClient(client, idChat);
+        chat.setMessages(clientDao.getMessagesByChat(client, chat));
+
+        return chat;
+    }
 }

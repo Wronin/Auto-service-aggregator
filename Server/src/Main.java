@@ -13,6 +13,7 @@ public class Main {
     public static void main(String[] args) {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
+        clientController.getChatsForClient("log", "pas");
 
         try {
             ServerSocket serverSocket = new ServerSocket(3030);

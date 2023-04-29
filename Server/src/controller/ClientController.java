@@ -188,4 +188,11 @@ public class ClientController {
         Client client = new Client(login, password);
         clientService.sendClientMassage(client, idChat, message);
     }
+
+    //todo make send a date to client
+    public void getChatsForClient(String login, String password) {
+        Client client = new Client(login, password);
+        clientService.getChatsForClient(client);
+    }
+
 }

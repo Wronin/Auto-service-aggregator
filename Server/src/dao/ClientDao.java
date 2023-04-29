@@ -268,16 +268,94 @@ public class ClientDao {
         }
     }
 
-    public ArrayList<Chat> getChats(Client client) {
+    public ArrayList<Chat> getChatsForClient(Client client) {
         ArrayList<Chat> chats = new ArrayList<>();
 
         try {
             resultSet = statement.executeQuery("select " +
-                    "");
+                    "auto.vin, auto.reg_number, brand.name, model.name, auto_service.name " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join auto on client.idClient = auto.client_idClient " +
+                    "join model on auto.model_idModel = model.idModel " +
+                    "join brand on model.brand_idBrand = brand.idBrand " +
+                    "join chat on client.idClient = chat.client_idClient " +
+                    "join message on chat.idChat = message.chat_idChat " +
+                    "join auto_service on chat.auto_service_idAuto_service = auto_service.idAuto_service " +
+                    "where " +
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "' " +
+                    "group by 5;");
+
+            while (resultSet.next()) {
+                chats.add(
+                        new Chat(
+                                new Car(
+                                        resultSet.getString("auto.vin"),
+                                        resultSet.getString("auto.reg_number"),
+                                        resultSet.getString("brand.name"),
+                                        resultSet.getString("model.name")
+                                ),
+                                resultSet.getString("auto_service.name")
+                        )
+                );
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return chats;
+    }
+
+    public ArrayList<Message> getMessagesByChat(Client client, Chat chat) {
+        ArrayList<Message> messages = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery("select " +
+                    "message.text " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join chat on client.idClient = chat.client_idClient " +
+                    "join message on chat.idChat = message.chat_idChat " +
+                    "where " +
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+
+            while (resultSet.next()) {
+                messages.add(new Message(resultSet.getString("message.text")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return messages;
+    }
+
+    public Chat getCurrentChatForClient(Client client, int idChat) {
+        Chat chat = new Chat();
+        try {
+            resultSet = statement.executeQuery("select " +
+                    "auto.vin, auto.reg_number, brand.name, model.name, auto_service.name  " +
+                    "from account " +
+                    "join client on account.id = client.account_id " +
+                    "join chat on client.idClient = chat.client_idClient " +
+                    "join auto on client.idClient = auto.client_idClient " +
+                    "join model on auto.model_idModel = model.idModel " +
+                    "join brand on model.brand_idBrand = brand.idBrand " +
+                    "where " +
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "' and chat.client_idClient = '" + idChat + "';");
+        chat = new Chat(
+                new Car(
+                        resultSet.getString("auto.vin"),
+                        resultSet.getString("auto.reg_number"),
+                        resultSet.getString("brand.name"),
+                        resultSet.getString("model.name")
+                ),
+                resultSet.getString("auto_service.name")
+        );
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return chat;
     }
 }

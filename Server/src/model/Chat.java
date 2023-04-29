@@ -13,6 +13,14 @@ public class Chat {
         this.messages = messages;
     }
 
+    public Chat(Car car, String carServiceName) {
+        this.car = car;
+        this.carServiceName = carServiceName;
+    }
+
+    public Chat() {
+    }
+
     public void setCar(Car car) {
         this.car = car;
     }
