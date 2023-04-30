@@ -43,15 +43,32 @@ public class ClientService {
         return clientDao.getAnswerAutoService(client);
     }
 
-    public CarService getCarServiceByName(String name) {
-        ArrayList<CarService> carServices = clientDao.getCarServiceByName();
+    public CarService getCarServiceById(int id) {
+        ArrayList<CarService> carServices = clientDao.getCarServices();
 
         for (CarService carService : carServices) {
-            if (carService.getName().equals(name)) {
+            if (carService.getId() == id) {
+                carService.setServices(removeDuplicates(clientDao.getCarServiceServicesById(id)));
                 return carService;
             }
         }
         return new CarService();
+    }
+
+    public ArrayList<Service> removeDuplicates(ArrayList<Service> services) {
+        ArrayList<Service> newServices = new ArrayList<>();
+        ArrayList<String> newServicesName = new ArrayList<>();
+        ArrayList<String> names = new ArrayList<>();
+
+        for(Service service : services) {
+            newServicesName.add(service.getName());
+        }
+
+        for(String name : newServicesName) {
+            
+        }
+
+        return newServices;
     }
     public void acceptRequestForClient(Client client, int idAnswer) {
         clientDao.acceptRequestForClient(client, idAnswer);
@@ -65,15 +82,15 @@ public class ClientService {
         ArrayList<Chat> chats = clientDao.getChatsForClient(client);
 
         for (Chat chat : chats) {
-            chat.setMessages(clientDao.getMessagesByChat(client, chat));
+            chat.setMessages(clientDao.getMessagesByChatId(client, chat.getId()));
         }
 
-        return clientDao.getChatsForClient(client);
+        return chats;
     }
 
     public Chat getCurrentChatForClient(Client client, int idChat) {
         Chat chat = clientDao.getCurrentChatForClient(client, idChat);
-        chat.setMessages(clientDao.getMessagesByChat(client, chat));
+        chat.setMessages(clientDao.getMessagesByChatId(client, idChat));
 
         return chat;
     }

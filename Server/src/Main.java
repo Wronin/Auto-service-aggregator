@@ -3,7 +3,6 @@ import controller.ClientController;
 import org.json.simple.JsonObject;
 import org.json.simple.Jsoner;
 
-import javax.naming.ldap.SortKey;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -13,7 +12,8 @@ public class Main {
     public static void main(String[] args) {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
-        clientController.getChatsForClient("log", "pas");
+
+        clientController.getCarServiceById(new Socket(), 1);
 
         try {
             ServerSocket serverSocket = new ServerSocket(3030);
@@ -117,13 +117,14 @@ public class Main {
                             );
                     case "getAnswerAutoService" ->
                             clientController.getAnswerAutoService(
-                                    socket, (String) jsonObject.get("login"),
+                                    socket,
+                                    (String) jsonObject.get("login"),
                                     (String) jsonObject.get("password")
                             );
                     case "getCarServiceByName" ->
-                            clientController.getCarServiceByName(
+                            clientController.getCarServiceById(
                                     socket,
-                                    (String) jsonObject.get("name")
+                                    jsonObject.getInteger("id")
                             );
                     case "acceptRequestForClient" ->
                             clientController.acceptRequestForClient(

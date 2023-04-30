@@ -3,9 +3,17 @@ package model;
 import java.util.ArrayList;
 
 public class Chat {
+    private int id;
     private Car car;
     private String carServiceName;
     private ArrayList<Message> messages;
+
+    public Chat(int id, Car car, String carServiceName, ArrayList<Message> messages) {
+        this.id = id;
+        this.car = car;
+        this.carServiceName = carServiceName;
+        this.messages = messages;
+    }
 
     public Chat(Car car, String carServiceName, ArrayList<Message> messages) {
         this.car = car;
@@ -21,6 +29,10 @@ public class Chat {
     public Chat() {
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public void setCar(Car car) {
         this.car = car;
     }
@@ -31,6 +43,10 @@ public class Chat {
 
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Car getCar() {

@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class CarService {
+    private int id;
     private String name;
     private String specification;
     private ArrayList<Service> services;
+
+    public CarService(int id, String name, String specification, ArrayList<Service> services) {
+        this.id = id;
+        this.name = name;
+        this.specification = specification;
+        this.services = services;
+    }
 
     public CarService(String name, String specification, ArrayList<Service> services) {
         this.name = name;
@@ -44,5 +52,13 @@ public class CarService {
 
     public void setServices(ArrayList<Service> services) {
         this.services = services;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

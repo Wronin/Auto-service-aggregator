@@ -162,21 +162,21 @@ public class ClientController {
         }
     }
 
-    public void getCarServiceByName(Socket socket, String name) {
-        CarService carService = clientService.getCarServiceByName(name);
-
-        try {
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-
-            printWriter.println(carService.getName());
-            printWriter.flush();
-
-            printWriter.println(carService.getSpecification());
-            printWriter.flush();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void getCarServiceById(Socket socket, int id) {
+        CarService carService = clientService.getCarServiceById(id);
+//
+//        try {
+//            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+//
+//            printWriter.println(carService.getName());
+//            printWriter.flush();
+//
+//            printWriter.println(carService.getSpecification());
+//            printWriter.flush();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void acceptRequestForClient(String login, String password, int idAnswer) {
@@ -193,6 +193,11 @@ public class ClientController {
     public void getChatsForClient(String login, String password) {
         Client client = new Client(login, password);
         clientService.getChatsForClient(client);
+    }
+
+    public void getCurrentChatForClient(String login, String password, int idChat) {
+        Client client = new Client(login, password);
+        Chat chat = clientService.getCurrentChatForClient(client, idChat);
     }
 
 }

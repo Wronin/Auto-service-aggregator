@@ -1,5 +1,7 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Request {
     private Client client;
     private ServiceAdmin serviceAdmin;
@@ -7,6 +9,17 @@ public class Request {
     private Car car;
     private Status status;
     private int id;
+    private ArrayList<Service> services;
+
+    public Request(Client client, ServiceAdmin serviceAdmin, String description, Car car, Status status, int id, ArrayList<Service> services) {
+        this.client = client;
+        this.serviceAdmin = serviceAdmin;
+        this.description = description;
+        this.car = car;
+        this.status = status;
+        this.id = id;
+        this.services = services;
+    }
 
     public Request(Client client, ServiceAdmin serviceAdmin, String description, Car car, Status status) {
         this.client = client;
@@ -79,5 +92,12 @@ public class Request {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public ArrayList<Service> getServices() {
+        return services;
+    }
+    public void setServices(ArrayList<Service> services) {
+        this.services = services;
     }
 }
