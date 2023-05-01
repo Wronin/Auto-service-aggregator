@@ -100,6 +100,13 @@ public class ClientController {
         clientService.addRequest(client, description, car, Status.SEARCH);
     }
 
+    public void addRequestWithServices(String login, String password, String description, String brand, String model, String vin, String regNumber, ArrayList<Service> services) {
+        Client client = new Client(login, password);
+        Car car = new Car(vin, regNumber, brand, model);
+        Request request = new Request(client, description, car, services, Status.SEARCH);
+        clientService.addRequestWithServices(request);
+    }
+
     public void getAllClientRequest(Socket socket, String login, String password) {
         Client client = new Client(login, password);
         ArrayList<RequestForClient> requests = clientService.getAllClientRequest(client);
@@ -164,19 +171,19 @@ public class ClientController {
 
     public void getCarServiceById(Socket socket, int id) {
         CarService carService = clientService.getCarServiceById(id);
-//
-//        try {
-//            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
-//
-//            printWriter.println(carService.getName());
-//            printWriter.flush();
-//
-//            printWriter.println(carService.getSpecification());
-//            printWriter.flush();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+
+            printWriter.println(carService.getName());
+            printWriter.flush();
+
+            printWriter.println(carService.getSpecification());
+            printWriter.flush();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void acceptRequestForClient(String login, String password, int idAnswer) {

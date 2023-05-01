@@ -1,11 +1,13 @@
 import controller.AdminController;
 import controller.ClientController;
+import model.Service;
 import org.json.simple.JsonObject;
 import org.json.simple.Jsoner;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 
 public class Main {
@@ -13,7 +15,10 @@ public class Main {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
 
-        clientController.getCarServiceById(new Socket(), 1);
+        ArrayList<Service> services = new ArrayList<>();
+        services.add(new Service(1, "Замена масла", "Замена вашего масла на наше"));
+        services.add(new Service(2, "Покраска автомобиля", "Любой слжоности"));
+        clientController.addRequestWithServices("log", "pas", "need help Steam", "BMW", "X1", "123qwe", "k111kk11", services);
 
         try {
             ServerSocket serverSocket = new ServerSocket(3030);
@@ -76,7 +81,7 @@ public class Main {
                         clientController.sendClientMassage(
                                 (String) jsonObject.get("login"),
                                 (String) jsonObject.get("password"),
-                                (Integer) jsonObject.get("idChat"),
+                                jsonObject.getInteger("idChat"),
                                 (String) jsonObject.get("message")
                         );
                     case "getAllAdminRequest" ->
@@ -89,7 +94,7 @@ public class Main {
                             adminController.getCurrentAdminRequest(
                                     (String) jsonObject.get("login"),
                                     (String) jsonObject.get("password"),
-                                    Integer.parseInt((String) jsonObject.get("id"))
+                                    jsonObject.getInteger("id")
                             );
                     case "createChat" ->
                             adminController.createChat(
@@ -101,13 +106,13 @@ public class Main {
                                     (String) jsonObject.get("VINNumber"),
                                     (String) jsonObject.get("regNumber"),
                                     (String) jsonObject.get("status"),
-                                    (Integer) jsonObject.get("id")
+                                    jsonObject.getInteger("id")
                             );
                     case "acceptRequestForAdmin" ->
                             adminController.acceptRequestForAdmin(
                                     (String) jsonObject.get("login"),
                                     (String) jsonObject.get("password"),
-                                    (Integer) jsonObject.get("id")
+                                    jsonObject.getInteger("id")
                             );
                     case "getAllClientRequest" ->
                             clientController.getAllClientRequest(

@@ -93,12 +93,73 @@ public class ClientDao {
             }
 
             String sql;
-            sql = "insert into Request(Description, auto_id, Status) values('" + request.getDescription() + "', " + idAuto + ", '" + request.getStatus() + "');";
+            sql = "insert into Request(`Description`, `auto_id`, `Status`) values('" + request.getDescription() + "', " + idAuto + ", '" + request.getStatus() + "');";
             statement.executeUpdate(sql);
 
          } catch (Exception e) {
              e.printStackTrace();
          }
+    }
+
+    public void addRequestWithServices(Request request) {
+        try {
+            int idAuto = 0, idRequest = 0;
+            resultSet = statement.executeQuery("select " +
+                    "auto.id, auto.vin " +
+                    "from account " +
+                    "join auto on account.id = auto.account_id " +
+                    "join model on auto.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
+                    "where " +
+                    "account.Login = '" + request.getClient().getLogin() + "' and account.Password = '" + request.getClient().getPassword() + "';");
+
+            while (resultSet.next()) {
+                if (resultSet.getString("auto.vin").equals(request.getCar().getVINNumber()))
+                    idAuto = resultSet.getInt("auto.id");
+            }
+
+            statement.executeUpdate("insert into request (`description`, `auto_id`, `status`) values('" + request.getDescription() + "', '" + idAuto + "', '" + request.getStatus() + "');");
+
+            resultSet = statement.executeQuery("select " +
+                    "auto.id, request.id, auto.Reg_number, request.Description, auto_service.name, request.Status " +
+                    "from account " +
+                    "join auto on account.id = auto.account_id " +
+                    "join request on request.auto_id = auto.id " +
+                    "left join auto_service on request.auto_service_id = auto_service.id " +
+                    "where " +
+                    "account.login = '" + request.getClient().getLogin() + "' and account.password = '" + request.getClient().getPassword() + "';");
+
+            while (resultSet.next()) {
+                if (resultSet.getString("description").equals(request.getDescription()) && resultSet.getInt("auto.id") == idAuto) {
+                    idRequest = resultSet.getInt("request.id");
+                }
+            }
+
+            for (var service : request.getServices()) {
+                statement.executeUpdate("insert into status_service(`request_id`, `service_id`) values('" + idRequest + "', '" + service.getId() + "');");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Service> getAllServices() {
+        ArrayList<Service> services = new ArrayList<>();
+
+        try {
+            resultSet = statement.executeQuery("select " +
+                    "service.id, service.name, service.description " +
+                    "from service;");
+
+            while (resultSet.next()) {
+                services.add(new Service(resultSet.getInt("id"), resultSet.getString("name"), resultSet.getString("description")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return services;
     }
 
     public ArrayList<RequestForClient> getAllClientRequest(Client client) {
@@ -111,6 +172,8 @@ public class ClientDao {
                     "join auto on account.id = auto.account_id " +
                     "join request on request.auto_id = auto.id " +
                     "left join auto_service on request.auto_service_id = auto_service.id " +
+                    "left join status_service on request.id = status_service.request_id " +
+                    "left join service on service.id = status_service.service_id " +
                     "where " +
                     "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
@@ -166,7 +229,7 @@ public class ClientDao {
 
         try {
             resultSet = statement.executeQuery("select " +
-                    "service.name, service.description " +
+                    "service.id, service.name, service.description " +
                     "from auto_service " +
                     "join autoService_service on auto_service.id = autoService_service.auto_service_id " +
                     "join service on autoService_service.service_id = service.id " +
@@ -174,7 +237,7 @@ public class ClientDao {
                     "auto_service_id = '" + idAutoService + "';");
 
             while (resultSet.next()) {
-                services.add(new Service(resultSet.getString("service.name"), resultSet.getString("service.description")));
+                services.add(new Service(resultSet.getInt("id"), resultSet.getString("service.name"), resultSet.getString("service.description")));
             }
         } catch (Exception e) {
             e.printStackTrace();

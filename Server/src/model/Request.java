@@ -36,6 +36,14 @@ public class Request {
         this.status = status;
     }
 
+    public Request(Client client, String description, Car car, ArrayList<Service> services, Status status) {
+        this.client = client;
+        this.description = description;
+        this.car = car;
+        this.services = services;
+        this.status = status;
+    }
+
     public Request(int id, String description, Car car, Status status) {
         this.id = id;
         this.description = description;

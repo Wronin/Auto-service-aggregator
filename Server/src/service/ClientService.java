@@ -30,9 +30,17 @@ public class ClientService {
     public ArrayList<Car> getCarList(Client client) {
         return clientDao.getCarList(client);
     }
+
+    public ArrayList<Service> getAllServices() {
+        return clientDao.getAllServices();
+    }
     public void addRequest(Client client, String description, Car car, Status status) {
         Request request = new Request(client, description, car, status);
         clientDao.addRequest(client, request);
+    }
+
+    public void addRequestWithServices(Request request) {
+        clientDao.addRequestWithServices(request);
     }
 
     public ArrayList<RequestForClient> getAllClientRequest(Client client) {
@@ -64,8 +72,14 @@ public class ClientService {
             newServicesName.add(service.getName());
         }
 
-        for(String name : newServicesName) {
-            
+        for(String newServiceName : newServicesName) {
+            if(!names.contains(newServiceName)) {
+                names.add(newServiceName);
+            }
+        }
+
+        for (String name : names) {
+            newServices.add(new Service(name));
         }
 
         return newServices;
