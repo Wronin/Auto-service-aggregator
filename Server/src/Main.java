@@ -1,24 +1,17 @@
 import controller.AdminController;
 import controller.ClientController;
-import model.Service;
 import org.json.simple.JsonObject;
 import org.json.simple.Jsoner;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 
 public class Main {
     public static void main(String[] args) {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
-
-        adminController.getChatsForAdmin(new Socket(), "log1", "pas1");
-        adminController.sendAdminMassage("log1", "pas1", 1, "test from admin");
-
-
 
         try {
             ServerSocket serverSocket = new ServerSocket(3030);

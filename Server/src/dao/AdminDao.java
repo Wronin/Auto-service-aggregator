@@ -72,19 +72,19 @@ public class AdminDao {
         try {
             int idAuto_Service = 0;
 
-            resultSet = statement.executeQuery("select " +
+            resultSet = statement.executeQuery(String.format("select " +
                     "auto_service.id " +
                     "from account " +
                     "join auto_service on account.id = auto_service.account_id " +
                     "where " +
-                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "';");
+                    "account.login = '%s' and account.password = '%s';", serviceAdmin.getLogin(), serviceAdmin.getPassword()));
 
             while (resultSet.next()) {
-                idAuto_Service = Integer.parseInt(resultSet.getString("id"));
+                idAuto_Service = resultSet.getInt("id");
             }
 
             String sql;
-            sql = "insert into answer (`Status`, `auto_service_id`, `request_id`) values('Expect', '" + idAuto_Service + "', '" + id + "');";
+            sql = String.format("insert into answer (`Status`, `auto_service_id`, `request_id`) values('Expect', '%d', '%d');", idAuto_Service, id);
             statement.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,19 +95,19 @@ public class AdminDao {
         try {
             int idAuto_Service = 0;
 
-            resultSet = statement.executeQuery("select " +
+            resultSet = statement.executeQuery(String.format("select " +
                     "auto_service.id " +
                     "from account " +
                     "join auto_service on account.id = auto_service.account_id " +
                     "where " +
-                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "';");
+                    "account.login = '%s' and account.password = '%s';", serviceAdmin.getLogin(), serviceAdmin.getPassword()));
 
             while (resultSet.next()) {
-                idAuto_Service = Integer.parseInt(resultSet.getString("id"));
+                idAuto_Service = resultSet.getInt("id");
             }
 
             for (Service service: services) {
-                statement.executeUpdate("insert into answer (`status`, `auto_service_id`, `request_id`, autoService_service_id`) values ('Expect', '" + idAuto_Service + "', '" + id + "', '" + service.getId() + "');");
+                statement.executeUpdate(String.format("insert into answer (`status`, `auto_service_id`, `request_id`, autoService_service_id`) values ('Expect', '%d', '%d', '%d');", idAuto_Service, id, service.getId()));
             }
 
 
@@ -120,7 +120,7 @@ public class AdminDao {
         ArrayList<Chat> chats = new ArrayList<>();
         try {
 
-            resultSet = statement.executeQuery("select " +
+            resultSet = statement.executeQuery(String.format("select " +
                     "chat.id, auto.vin, auto.reg_number, model.name, brand.name, auto_service.name " +
                     "from account " +
                     "join auto_service on account.id = auto_service.account_id " +
@@ -129,7 +129,7 @@ public class AdminDao {
                     "join model on auto.model_id = model.id " +
                     "join brand on model.brand_id = brand.id " +
                     "where " +
-                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "';");
+                    "account.login = '%s' and account.password = '%s';", serviceAdmin.getLogin(), serviceAdmin.getPassword()));
 
             while (resultSet.next()) {
                 chats.add(
@@ -156,13 +156,13 @@ public class AdminDao {
         try {
             int id = 0;
 
-            resultSet = statement.executeQuery("select " +
+            resultSet = statement.executeQuery(String.format("select " +
                     "chat.id " +
                     "from account " +
                     "join auto_service on account.id = auto_service.account_id " +
                     "join chat on auto_service.id = chat.auto_service_id " +
                     "where " +
-                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "' and chat.id = '" + idChat + "';");
+                    "account.login = '%s' and account.password = '%s' and chat.id = '%d';", serviceAdmin.getLogin(), serviceAdmin.getPassword(), idChat));
 
             while (resultSet.next()) {
                 if (resultSet.getInt("chat.id") == idChat) {
@@ -170,7 +170,7 @@ public class AdminDao {
                 }
             }
 
-            statement.executeUpdate("insert into message (`text`, `chat_id`) values ('" + message + "', '" + id + "');");
+            statement.executeUpdate(String.format("insert into message (`text`, `chat_id`) values ('%s', '%d');", message, id));
         } catch (Exception e) {
             e.printStackTrace();
         }
