@@ -4,6 +4,7 @@ import model.*;
 import service.AdminService;
 
 import java.io.PrintWriter;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -59,10 +60,20 @@ public class AdminController {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
         adminService.acceptRequestForAdmin(serviceAdmin, id);
     }
-    public void createChat(String login, String password, String description, String brand, String model, String VINNumber, String regNumber, String status, int id) {
+
+    public void acceptRequestForAdminWithServices(String login, String password, int idRequest, ArrayList<Service> services) {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
-        Car car = new Car(VINNumber, regNumber, brand, model);
-        Request request = new Request(id, description, car, Status.SEARCH);
-        adminService.createChat(serviceAdmin, request);
+        adminService.acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
+    }
+
+    //todo make a controller's functions send a date
+    public void getChatsForAdmin(Socket socket, String login, String password) {
+        ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
+        ArrayList<Chat> chats = adminService.getChatsForAdmin(serviceAdmin);
+    }
+
+    public void sendAdminMassage(String login, String password, int idChat, String message) {
+        ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
+        adminService.sendAdminMassage(serviceAdmin, idChat, message);
     }
 }

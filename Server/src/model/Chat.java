@@ -26,6 +26,12 @@ public class Chat {
         this.carServiceName = carServiceName;
     }
 
+    public Chat(int id, Car car, String carServiceName) {
+        this.id = id;
+        this.car = car;
+        this.carServiceName = carServiceName;
+    }
+
     public Chat() {
     }
 

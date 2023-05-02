@@ -1,7 +1,9 @@
 package service;
 
 import dao.AdminDao;
+import model.Chat;
 import model.Request;
+import model.Service;
 import model.ServiceAdmin;
 
 import java.util.ArrayList;
@@ -29,8 +31,18 @@ public class AdminService {
         adminDao.acceptRequestForAdmin(serviceAdmin, id);
     }
 
-    public void createChat(ServiceAdmin serviceAdmin, Request request) {
-        adminDao.createChat(serviceAdmin, request);
+    public void acceptRequestForAdminWithServices(ServiceAdmin serviceAdmin, int idRequest, ArrayList<Service> services) {
+        adminDao.acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
     }
+
+    public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
+        return adminDao.getChatsForAdmin(serviceAdmin);
+    }
+
+    public void sendAdminMassage(ServiceAdmin serviceAdmin, int idChat, String message) {
+        message = "Admin: " + message;
+        adminDao.sendAdminMassage(serviceAdmin, idChat, message);
+    }
+
 
 }

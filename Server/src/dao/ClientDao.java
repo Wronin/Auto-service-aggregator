@@ -48,6 +48,53 @@ public class ClientDao {
         }
     }
 
+    public void deleteCar(Client client, Car car) {
+        try {
+            statement.executeUpdate("delete auto " +
+                    "from auto " +
+                    "join account on auto.account_id = account.id " +
+                    "where auto.vin = '" + car.getVINNumber() + "' and auto.reg_number = '" + car.getRegNumber() + "' and account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateCarInformation(Client client, Car car, Car newCar) {
+        try {
+            int idModel = 0, idAuto = 0;
+
+            resultSet = statement.executeQuery("select " +
+                    "model.id, model.Name, Brand.Name, Brand.id " +
+                    "from Model " +
+                    "join Brand on Model.Brand_id = Brand.id");
+
+            while (resultSet.next()) {
+                if (resultSet.getString("model.Name").equals(newCar.getModel()) && resultSet.getString("brand.Name").equals(newCar.getBrand())) {
+                    idModel = resultSet.getInt("model.id");
+                }
+            }
+            resultSet = statement.executeQuery("select " +
+                    "auto.id, auto.vin, auto.reg_number " +
+                    "from account " +
+                    "join auto on account.id = auto.account_id " +
+                    "where " +
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "' and auto.vin = '" + car.getVINNumber() + "' and auto.reg_number = '" + car.getRegNumber() + "';");
+
+            while (resultSet.next()) {
+                if (resultSet.getString("auto.vin").equals(car.getVINNumber()) && resultSet.getString("auto.reg_number").equals(car.getRegNumber())) {
+                    idAuto = resultSet.getInt("auto.id");
+                }
+            }
+
+            statement.executeUpdate("update auto " +
+                    "set vin = '" + newCar.getVINNumber() + "', reg_number = '" + newCar.getRegNumber() + "', model_id = '" + idModel + "' " +
+                    "where auto.id = " + idAuto + ";");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public ArrayList<Car> getCarList(Client client) {
         ArrayList<Car> cars = new ArrayList<>();
         try {
@@ -321,11 +368,11 @@ public class ClientDao {
                     "join auto on account.id = auto.account_id " +
                     "join chat on auto.id = chat.auto_id " +
                     "where " +
-                    "account.login ='" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
+                    "account.login = '" + client.getLogin() + "' and account.password = '" + client.getPassword() + "';");
 
             while (resultSet.next()) {
-                if (resultSet.getInt("id") == idChat) {
-                    id = resultSet.getInt("id");
+                if (resultSet.getInt("chat.id") == idChat) {
+                    id = resultSet.getInt("chat.id");
                 }
             }
             statement.executeUpdate("insert into message (`text`, `chat_id`) values ('" + message + "', '" + id + "');");

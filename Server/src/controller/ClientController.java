@@ -20,6 +20,19 @@ public class ClientController {
         clientService.addCar(client, brand, model, VINNumber, regNumber);
     }
 
+    public void deleteCar(String login, String password, String brand, String model, String VINNumber, String regNumber) {
+        Client client = new Client(login, password);
+        Car car = new Car(VINNumber, regNumber, brand, model);
+        clientService.deleteCar(client, car);
+    }
+
+    public void updateCarInformation(String login, String password, String brand, String model, String VINNumber, String regNumber, String newBrand, String newModel, String newVINNumber, String newRegNumber) {
+        Client client = new Client(login, password);
+        Car car = new Car(VINNumber, regNumber, brand, model);
+        Car newCar = new Car(newVINNumber, newRegNumber, newBrand, newModel);
+        clientService.updateCarInformation(client, car, newCar);
+    }
+
     public void getCar(Socket socket, String login, String password, String regNumber) {
         Client client = new Client(login, password);
         Car car = clientService.getCar(client, regNumber);

@@ -16,6 +16,14 @@ public class ClientService {
         clientDao.addCar(client, car);
     }
 
+    public void deleteCar(Client client, Car car) {
+        clientDao.deleteCar(client, car);
+    }
+
+    public void updateCarInformation(Client client, Car car, Car newCar) {
+        clientDao.updateCarInformation(client, car, newCar);
+    }
+
     public Car getCar(Client client, String regNumber) {
 
         ArrayList<Car> cars = clientDao.getCarList(client);
@@ -90,6 +98,7 @@ public class ClientService {
     }
 
     public void sendClientMassage(Client client, int idChat, String message) {
+        message = "Client: " + message;
         clientDao.sendClientMassage(client, idChat, message);
     }
     public ArrayList<Chat> getChatsForClient(Client client) {

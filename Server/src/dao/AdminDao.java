@@ -1,16 +1,12 @@
 package dao;
 
-import model.Car;
-import model.Request;
-import model.ServiceAdmin;
-import model.Status;
+import model.*;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class AdminDao {
 //    public static class AdminDaoSingle {
@@ -36,13 +32,13 @@ public class AdminDao {
         ArrayList<Request> requests = new ArrayList<>();
         try {
             resultSet = statement.executeQuery("select " +
-                    "request.idRequest, request.description, model.Name, brand.Name, auto.reg_number, auto.vin, request.status " +
+                    "request.id, request.description, model.name, brand.name, auto.reg_number, auto.vin, request.status " +
                     "from request " +
-                    "join client on client.idClient = request.client_idclient " +
-                    "join auto on client.auto_idAuto = auto.idauto " +
-                    "join model on auto.model_idModel = model.idmodel " +
-                    "join brand on model.brand_idBrand = brand.idbrand " +
-                    "where request.auto_service_idAuto_service is NULL;");
+                    "join auto on request.auto_id = auto.id " +
+                    "join model on auto.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
+                    "where " +
+                    "request.auto_service_id is NULL;");
 
             while (resultSet.next()) {
                 Status status = switch (resultSet.getString("request.status")) {
@@ -52,7 +48,7 @@ public class AdminDao {
 
                 requests.add(
                         new Request(
-                                Integer.parseInt(resultSet.getString("request.idrequest")),
+                                resultSet.getInt("request.id"),
                                 resultSet.getString("request.description"),
                                 new Car(
                                         resultSet.getString("auto.vin"),
@@ -76,48 +72,107 @@ public class AdminDao {
         try {
             int idAuto_Service = 0;
 
-            resultSet = statement.executeQuery("select * from auto_service;");
+            resultSet = statement.executeQuery("select " +
+                    "auto_service.id " +
+                    "from account " +
+                    "join auto_service on account.id = auto_service.account_id " +
+                    "where " +
+                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "';");
 
             while (resultSet.next()) {
-                if (resultSet.getString("login").equals(serviceAdmin.getLogin()))
-                    idAuto_Service = Integer.parseInt(resultSet.getString("idAuto_Service"));
+                idAuto_Service = Integer.parseInt(resultSet.getString("id"));
             }
 
             String sql;
-            sql = "insert into answer values(last_insert_id(), " + id + ", " + idAuto_Service + ", 'Expect');";
+            sql = "insert into answer (`Status`, `auto_service_id`, `request_id`) values('Expect', '" + idAuto_Service + "', '" + id + "');";
             statement.executeUpdate(sql);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void createChat(ServiceAdmin serviceAdmin, Request request) {
+    public void acceptRequestForAdminWithServices(ServiceAdmin serviceAdmin, int id, ArrayList<Service> services) {
         try {
-            int idClient = 0, idAuto_service = 0;
-            String sql = "select " +
-                    "client.idclient " +
-                    "from request " +
-                    "join client on client.idclient = request.idrequest;";
-            resultSet = statement.executeQuery(sql);
+            int idAuto_Service = 0;
+
+            resultSet = statement.executeQuery("select " +
+                    "auto_service.id " +
+                    "from account " +
+                    "join auto_service on account.id = auto_service.account_id " +
+                    "where " +
+                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "';");
 
             while (resultSet.next()) {
-                System.out.println(resultSet.getString("client.idClient"));
-                if (Integer.parseInt(resultSet.getString("idClient")) == request.getId())
-                    idClient = Integer.parseInt(resultSet.getString("idClient"));
-            }
-            sql = "select * from auto_service;";
-            resultSet = statement.executeQuery(sql);
-
-            while (resultSet.next()) {
-                if (Objects.equals(resultSet.getString("login"), serviceAdmin.getLogin()))
-                    idAuto_service = Integer.parseInt(resultSet.getString("idAuto_Service"));
+                idAuto_Service = Integer.parseInt(resultSet.getString("id"));
             }
 
-            statement.executeUpdate("insert into chat(Client_idClient, Auto_service_idAuto_service) " +
-                    "values(" + idClient + ", " + idAuto_service + ");");
+            for (Service service: services) {
+                statement.executeUpdate("insert into answer (`status`, `auto_service_id`, `request_id`, autoService_service_id`) values ('Expect', '" + idAuto_Service + "', '" + id + "', '" + service.getId() + "');");
+            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
+        ArrayList<Chat> chats = new ArrayList<>();
+        try {
+
+            resultSet = statement.executeQuery("select " +
+                    "chat.id, auto.vin, auto.reg_number, model.name, brand.name, auto_service.name " +
+                    "from account " +
+                    "join auto_service on account.id = auto_service.account_id " +
+                    "join chat on auto_service.id = chat.auto_service_id " +
+                    "join auto on chat.auto_id = auto.id " +
+                    "join model on auto.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
+                    "where " +
+                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "';");
+
+            while (resultSet.next()) {
+                chats.add(
+                        new Chat(
+                                resultSet.getInt("id"),
+                                new Car(
+                                        resultSet.getString("auto.vin"),
+                                        resultSet.getString("auto.reg_number"),
+                                        resultSet.getString("model.name"),
+                                        resultSet.getString("brand.name")
+                                ),
+                                resultSet.getString("auto_service.name")
+                                )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return chats;
+    }
+
+    public void sendAdminMassage(ServiceAdmin serviceAdmin, int idChat, String message) {
+        try {
+            int id = 0;
+
+            resultSet = statement.executeQuery("select " +
+                    "chat.id " +
+                    "from account " +
+                    "join auto_service on account.id = auto_service.account_id " +
+                    "join chat on auto_service.id = chat.auto_service_id " +
+                    "where " +
+                    "account.login = '" + serviceAdmin.getLogin() + "' and account.password = '" + serviceAdmin.getPassword() + "' and chat.id = '" + idChat + "';");
+
+            while (resultSet.next()) {
+                if (resultSet.getInt("chat.id") == idChat) {
+                    id = resultSet.getInt("chat.id");
+                }
+            }
+
+            statement.executeUpdate("insert into message (`text`, `chat_id`) values ('" + message + "', '" + id + "');");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

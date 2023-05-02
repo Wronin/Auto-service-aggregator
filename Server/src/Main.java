@@ -15,10 +15,10 @@ public class Main {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
 
-        ArrayList<Service> services = new ArrayList<>();
-        services.add(new Service(1, "Замена масла", "Замена вашего масла на наше"));
-        services.add(new Service(2, "Покраска автомобиля", "Любой слжоности"));
-        clientController.addRequestWithServices("log", "pas", "need help Steam", "BMW", "X1", "123qwe", "k111kk11", services);
+        adminController.getChatsForAdmin(new Socket(), "log1", "pas1");
+        adminController.sendAdminMassage("log1", "pas1", 1, "test from admin");
+
+
 
         try {
             ServerSocket serverSocket = new ServerSocket(3030);
@@ -94,18 +94,6 @@ public class Main {
                             adminController.getCurrentAdminRequest(
                                     (String) jsonObject.get("login"),
                                     (String) jsonObject.get("password"),
-                                    jsonObject.getInteger("id")
-                            );
-                    case "createChat" ->
-                            adminController.createChat(
-                                    (String) jsonObject.get("login"),
-                                    (String) jsonObject.get("password"),
-                                    (String) jsonObject.get("description"),
-                                    (String) jsonObject.get("brand"),
-                                    (String) jsonObject.get("model"),
-                                    (String) jsonObject.get("VINNumber"),
-                                    (String) jsonObject.get("regNumber"),
-                                    (String) jsonObject.get("status"),
                                     jsonObject.getInteger("id")
                             );
                     case "acceptRequestForAdmin" ->
