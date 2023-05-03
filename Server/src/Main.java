@@ -77,6 +77,12 @@ public class Main {
                                 jsonObject.getInteger("idChat"),
                                 (String) jsonObject.get("message")
                         );
+                    case "getChatsForClient" ->
+                        clientController.getChatsForClient(
+                                socket,
+                                (String) jsonObject.get("login"),
+                                (String) jsonObject.get("password")
+                        );
                     case "getAllAdminRequest" ->
                             adminController.getAllAdminRequest(
                                     socket,

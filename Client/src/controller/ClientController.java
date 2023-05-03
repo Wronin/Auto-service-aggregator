@@ -1,8 +1,6 @@
 package controller;
 
-import model.AnswerAutoService;
-import model.CarService;
-import model.RequestForClient;
+import model.*;
 import org.json.simple.JSONObject;
 
 import javax.naming.ldap.SortKey;
@@ -278,5 +276,47 @@ public class ClientController {
             e.printStackTrace();
         }
 
+    }
+
+    public ArrayList<Chat> getChatsForClient(Socket socket, String login, String password) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "getChatsForClient");
+        jsonObject.put("login", login);
+        jsonObject.put("password", password);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(jsonObject.toJSONString());
+            printWriter.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int size = 0;
+        ArrayList<Chat> chats = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            size = Integer.parseInt(bufferedReader.readLine());
+
+            for (int i = 0; i < size; i++) {
+                chats.add(
+                        new Chat(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                new Car(
+                                        bufferedReader.readLine(),
+                                        bufferedReader.readLine(),
+                                        bufferedReader.readLine(),
+                                        bufferedReader.readLine()
+                                ),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return chats;
     }
 }

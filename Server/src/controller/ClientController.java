@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 import service.ClientService;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -210,9 +211,29 @@ public class ClientController {
     }
 
     //todo make send a date to client
-    public void getChatsForClient(String login, String password) {
+    public void getChatsForClient(Socket socket ,String login, String password) {
         Client client = new Client(login, password);
-        clientService.getChatsForClient(client);
+        ArrayList<Chat> chats = clientService.getChatsForClient(client);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+
+            printWriter.println(chats.size());
+            printWriter.flush();
+
+            for (Chat chat : chats) {
+                printWriter.println(chat.getId());
+                printWriter.println(chat.getCar().getVINNumber());
+                printWriter.println(chat.getCar().getRegNumber());
+                printWriter.println(chat.getCar().getBrand());
+                printWriter.println(chat.getCar().getBrand());
+                printWriter.println(chat.getCarServiceName());
+                printWriter.flush();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void getCurrentChatForClient(String login, String password, int idChat) {

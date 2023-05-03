@@ -1,10 +1,12 @@
 import controller.ClientController;
+import model.Chat;
 import model.Client;
 import org.json.simple.JSONObject;
 import view.Application;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,6 +15,7 @@ public class Main {
             Client client = new Client();
 
             Socket socket = new Socket("localhost", 3030);
+
             Application application = new Application(clientController, client, socket);
 
         } catch (IOException e) {

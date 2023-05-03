@@ -403,8 +403,8 @@ public class ClientDao {
 
             while (resultSet.next()) {
                 chats.add(
-                        resultSet.getInt("chat.id"),
                         new Chat(
+                                resultSet.getInt("chat.id"),
                                 new Car(
                                         resultSet.getString("auto.vin"),
                                         resultSet.getString("auto.reg_number"),
