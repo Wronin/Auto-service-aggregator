@@ -5,6 +5,7 @@ import model.Client;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Application extends JFrame{
@@ -29,11 +30,20 @@ public class Application extends JFrame{
         JTextField loginField = new JTextField(15);
         JPasswordField passwordField = new JPasswordField(15);
 
-        loginField.setText("log1");
-        passwordField.setText("pas1");
+        loginField.setText("log");
+        passwordField.setText("pas");
 
         JButton loginButton = new JButton("Войти");
         loginButton.addActionListener(e -> {
+
+            try {
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+                printWriter.println(loginField.getText());
+                printWriter.println(passwordField.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
             frame.dispose();
             client.setLogin(loginField.getText());
             client.setPassword(passwordField.getText());
