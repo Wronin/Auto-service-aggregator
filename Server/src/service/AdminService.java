@@ -1,5 +1,6 @@
 package service;
 
+import controller.ClientController;
 import dao.AdminDao;
 import model.Chat;
 import model.Request;
@@ -35,12 +36,18 @@ public class AdminService {
         adminDao.acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
     }
 
-    public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
+        public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
         return adminDao.getChatsForAdmin(serviceAdmin);
     }
 
+    public Chat getCurrentChatForAdmin(ServiceAdmin serviceAdmin, int idChat) {
+        Chat chat = adminDao.getCurrentChatForAdmin(serviceAdmin, idChat);
+        chat.setMessages(adminDao.getMessagesByChatId(serviceAdmin, idChat));
+        return chat;
+    }
+
     public void sendAdminMassage(ServiceAdmin serviceAdmin, int idChat, String message) {
-        message = "Admin: " + message;
+        message =  String.format("Admin: %s", message);
         adminDao.sendAdminMassage(serviceAdmin, idChat, message);
     }
 

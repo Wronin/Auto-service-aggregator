@@ -27,6 +27,28 @@ public class ClientController {
             fileWriter.write(jsonObject.toJSONString());
             fileWriter.close();
 
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            printWriter.println(jsonObject.toJSONString());
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void deleteCar(Socket socket, String login, String password, String brand, String model, String VINNumber, String regNumber) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "deleteCar");
+        jsonObject.put("login", login);
+        jsonObject.put("password", password);
+        jsonObject.put("brand", brand);
+        jsonObject.put("model", model);
+        jsonObject.put("VINNumber", VINNumber);
+        jsonObject.put("regNumber", regNumber);
+
+        File file = new File(System.getProperty("user.dir"), "file.json");
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(jsonObject.toJSONString());
+
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
             printWriter.println(jsonObject.toJSONString());
             printWriter.flush();
@@ -34,7 +56,33 @@ public class ClientController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
+    public void updateCarInformation(Socket socket, String login, String password, String brand, String model, String VINNumber, String regNumber, String newBrand, String newModel, String newVINNumber, String newRegNumber) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "updateCarInformation");
+        jsonObject.put("login", login);
+        jsonObject.put("password", password);
+        jsonObject.put("brand", brand);
+        jsonObject.put("model", model);
+        jsonObject.put("VINNumber", VINNumber);
+        jsonObject.put("regNumber", regNumber);
+        jsonObject.put("newBrand", newBrand);
+        jsonObject.put("newModel", newModel);
+        jsonObject.put("newVINNumber", newVINNumber);
+        jsonObject.put("newRegNumber", newRegNumber);
+
+        File file = new File(System.getProperty("user.dir"), "file.json");
+        try (FileWriter fileWriter = new FileWriter(file)) {
+            fileWriter.write(jsonObject.toJSONString());
+
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(jsonObject.toJSONString());
+            printWriter.flush();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void addRequest(Socket socket, String login, String password, String description, String brand, String model, String VINNumber, String regNumber) {
@@ -67,17 +115,15 @@ public class ClientController {
         }
     }
 
-    public void getCarList(Socket socket, String login, String password) {
+    public ArrayList<Car> getCarList(Socket socket, String login, String password) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("func", "getCarList");
         jsonObject.put("login", login);
         jsonObject.put("password", password);
 
-        try {
-            File file = new File(System.getProperty("user.dir"), "file.json");
-            FileWriter fileWriter = new FileWriter(file);
+        File file = new File(System.getProperty("user.dir"), "file.json");
+        try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(jsonObject.toJSONString());
-            fileWriter.close();
 
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
             printWriter.println(jsonObject.toJSONString());
@@ -87,19 +133,27 @@ public class ClientController {
             throw new RuntimeException(e);
         }
 
+        ArrayList<Car> cars = new ArrayList<>();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            String content = bufferedReader.readLine();
-
-            File file = new File(System.getProperty("user.dir"), "cars.json");
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(content);
-            fileWriter.close();
+            int size = Integer.parseInt(bufferedReader.readLine());
+            for (int i = 0; i < size; i++) {
+                cars.add(
+                        new Car(
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        return cars;
     }
 
     public ArrayList<String> getCarNumbers(Socket socket, String login, String password) {
@@ -116,14 +170,14 @@ public class ClientController {
             fileWriter.write(jsonObject.toJSONString());
             fileWriter.close();
 
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             printWriter.println(jsonObject.toJSONString());
             printWriter.flush();
 
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            String content = bufferedReader.readLine();
+            int size = Integer.parseInt(bufferedReader.readLine());
 
-            for (int i = 0; i < Integer.parseInt(content); i++) {
+            for (int i = 0; i < size; i++) {
                 carNumbers.add(bufferedReader.readLine());
             }
 
@@ -135,7 +189,7 @@ public class ClientController {
         return carNumbers;
     }
 
-    public void getCar(Socket socket, String login, String password, String regNumber) {
+    public Car getCar(Socket socket, String login, String password, String regNumber) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("func", "getCar");
         jsonObject.put("login", login);
@@ -146,23 +200,23 @@ public class ClientController {
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
             printWriter.println(jsonObject.toJSONString());
             printWriter.flush();
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
+        Car car = new Car();
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            String content = bufferedReader.readLine();
-
-            File file = new File(System.getProperty("user.dir"), "CurrentCar.json");
-            FileWriter fileWriter = new FileWriter(file);
-            fileWriter.write(content);
-            fileWriter.close();
+            car = new Car(
+                    bufferedReader.readLine(),
+                    bufferedReader.readLine(),
+                    bufferedReader.readLine(),
+                    bufferedReader.readLine()
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return car;
     }
 
     public ArrayList<RequestForClient> getAllClientRequest(Socket socket, String login, String password) {

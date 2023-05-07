@@ -3,8 +3,6 @@ import controller.ClientController;
 import dao.NetworkDao;
 import model.Client;
 import network.Network;
-import org.json.simple.JsonObject;
-import org.json.simple.Jsoner;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -20,9 +18,11 @@ public class Main {
             while (true) {
                 Socket socket = serverSocket.accept();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-                Client client = new Client(bufferedReader.readLine(), bufferedReader.readLine());
-                Network network = new Network(client, socket, bufferedReader, printWriter, clientController, adminController);
+                Client client = new Client(
+                        bufferedReader.readLine(),
+                        bufferedReader.readLine()
+                );
+                Network network = new Network(client, socket, bufferedReader, clientController, adminController);
                 NetworkDao.getInstance().addServerThread(network);
                 network.start();
             }

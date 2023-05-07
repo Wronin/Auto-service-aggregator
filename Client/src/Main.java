@@ -15,26 +15,15 @@ public class Main {
             Client client = new Client();
 
             Socket socket = new Socket("localhost", 3030);
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            printWriter.println("log");
+            printWriter.println("pas");
+            clientController.addCar(socket, "log", "pas", "BMW", "X1", "vin", "regNum");
 
-            Application application = new Application(clientController, client, socket);
+//            Application application = new Application(clientController, client, socket);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-//        try {
-//            Client client = new Client("log1", "pas1");
-
-
-//            clientController.addCar(socket, client.getLogin(), client.getPassword(), "BMW", "X5", "VINnum", "t999tt99");
-//            clientController.getCarList(socket, client.getLogin(), client.getPassword());
-//            clientController.getCar(socket, client.getLogin(), client.getPassword(), "a999aa99");
-//            clientController.addRequest(socket, client.getLogin(), client.getPassword(), "description1", "BMW", "X5", "VinNumber1", "o333oo33");
-//            socket.close();
-
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
     }
 }

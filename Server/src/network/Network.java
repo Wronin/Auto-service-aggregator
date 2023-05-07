@@ -13,18 +13,16 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Network extends Thread {
-    private Client client;
-    private Socket socket;
-    private BufferedReader bufferedReader;
-    private PrintWriter printWriter;
-    private ClientController clientController;
-    private AdminController adminController;
+    private final Client client;
+    private final Socket socket;
+    private final BufferedReader bufferedReader;
+    private final ClientController clientController;
+    private final AdminController adminController;
 
-    public Network(Client client, Socket socket, BufferedReader bufferedReader, PrintWriter printWriter, ClientController clientController, AdminController adminController) {
+    public Network(Client client, Socket socket, BufferedReader bufferedReader, ClientController clientController, AdminController adminController) {
         this.client = client;
         this.socket = socket;
         this.bufferedReader = bufferedReader;
-        this.printWriter = printWriter;
         this.clientController = clientController;
         this.adminController = adminController;
     }
@@ -46,7 +44,7 @@ public class Network extends Thread {
                 System.out.println(jsonObject.get("func"));
 
                 switch (jsonObject.get("func").toString()) {
-                    case "AddCar" -> clientController.addCar(
+                    case "addCar" -> clientController.addCar(
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             (String) jsonObject.get("brand"),
@@ -96,6 +94,7 @@ public class Network extends Thread {
                             (String) jsonObject.get("password")
                     );
                     case "getCurrentRequest" -> adminController.getCurrentAdminRequest(
+                            socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             jsonObject.getInteger("id")
@@ -130,37 +129,5 @@ public class Network extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public BufferedReader getBufferedReader() {
-        return bufferedReader;
-    }
-
-    public PrintWriter getPrintWriter() {
-        return printWriter;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public void setSocket(Socket socket) {
-        this.socket = socket;
-    }
-
-    public void setBufferedReader(BufferedReader bufferedReader) {
-        this.bufferedReader = bufferedReader;
-    }
-
-    public void setPrintWriter(PrintWriter printWriter) {
-        this.printWriter = printWriter;
     }
 }
