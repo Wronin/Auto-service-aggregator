@@ -1,8 +1,5 @@
 import controller.ClientController;
-import model.Chat;
-import model.Client;
-import org.json.simple.JSONObject;
-import view.Application;
+import model.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -15,26 +12,36 @@ public class Main {
             Client client = new Client();
 
             Socket socket = new Socket("localhost", 3030);
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            printWriter.println("log");
+            printWriter.println("pas");
 
-            Application application = new Application(clientController, client, socket);
+            ArrayList<Service> services = new ArrayList<>();
+            services.add(new Service(1));
+            services.add(new Service(2));
+//            clientController.addCar(socket, "log", "pas", "BMW", "X1", "vin", "regNum");
+//            clientController.updateCarInformation(socket, "log", "pas", "BMW", "X1", "vin", "regNum", "Audi", "Q1", "newVin", "newReg");
+//            clientController.deleteCar(socket, "log", "pas", "Audi", "Q1", "newVin", "newReg");
+//
+//            clientController.addCar(socket, "log", "pas", "BMW", "X1", "vin", "regNum");
+//            ArrayList<Car> cars = clientController.getCarList(socket, "log", "pas");
+//            ArrayList<String> carsNumbers = clientController.getCarNumbers(socket, "log", "pas");
+//            Car car = clientController.getCar(socket, "log", "pas", "regNum");
+//            clientController.addRequest(socket, "log", "pas", "description", "BMW", "X1", "vin", "regNum");
+//            clientController.addRequestWithServices(socket, "log", "pas", "BMW", "X1", "123qwe", "k111kk11", services);
+//            ArrayList<Chat> chats = clientController.getChatsForClient(socket, "log", "pas");
+//            Chat chat = clientController.getCurrentChatForClient(socket, "log", "pas", 1);
+//            clientController.sendClientMessage(socket, "log", "pas", 1, "test from client");
+//            ArrayList<RequestForClient> requestsForClient = clientController.getAllClientRequest(socket, "log", "pas");
+//            ArrayList<AnswerAutoService> answersAutoService = clientController.getAnswerAutoService(socket, "log", "pas");
+//            CarService carService = clientController.getCarServiceById(socket, 1);
+//            clientController.acceptRequest(socket, "log", "pas", 3);
+
+            System.out.println("done");
+            //            Application application = new Application(clientController, client, socket);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-//        try {
-//            Client client = new Client("log1", "pas1");
-
-
-//            clientController.addCar(socket, client.getLogin(), client.getPassword(), "BMW", "X5", "VINnum", "t999tt99");
-//            clientController.getCarList(socket, client.getLogin(), client.getPassword());
-//            clientController.getCar(socket, client.getLogin(), client.getPassword(), "a999aa99");
-//            clientController.addRequest(socket, client.getLogin(), client.getPassword(), "description1", "BMW", "X5", "VinNumber1", "o333oo33");
-//            socket.close();
-
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-
     }
 }

@@ -1,2 +1,4 @@
-package controller;public class NetworkController {
+package controller;
+
+public class NetworkController {
 }

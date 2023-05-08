@@ -21,6 +21,7 @@ public class Request {
         this.services = services;
     }
 
+
     public Request(Client client, ServiceAdmin serviceAdmin, String description, Car car, Status status) {
         this.client = client;
         this.serviceAdmin = serviceAdmin;

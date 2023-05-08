@@ -8,6 +8,9 @@ public class Chat {
     private String carServiceName;
     private ArrayList<Message> messages;
 
+    public Chat() {
+    }
+
     public Chat(int id, Car car, String carServiceName) {
         this.id = id;
         this.car = car;

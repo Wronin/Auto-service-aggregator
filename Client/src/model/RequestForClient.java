@@ -1,11 +1,23 @@
 package model;
 
+import java.util.ArrayList;
+
 public class RequestForClient {
     private int id;
     private String regNumber;
     private String description;
     private String name;
     private String status;
+    private ArrayList<Service> services;
+
+    public RequestForClient(int id, String regNumber, String description, String name, String status, ArrayList<Service> services) {
+        this.id = id;
+        this.regNumber = regNumber;
+        this.description = description;
+        this.name = name;
+        this.status = status;
+        this.services = services;
+    }
 
     public RequestForClient(String regNumber, String description, String status) {
         this.regNumber = regNumber;
@@ -19,6 +31,10 @@ public class RequestForClient {
         this.description = description;
         this.name = name;
         this.status = status;
+    }
+
+    public void addService(Service service) {
+        this.services.add(service);
     }
 
     public RequestForClient() {
@@ -62,5 +78,13 @@ public class RequestForClient {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public ArrayList<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(ArrayList<Service> services) {
+        this.services = services;
     }
 }

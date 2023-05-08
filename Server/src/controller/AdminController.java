@@ -17,32 +17,17 @@ public class AdminController {
         ArrayList<Request> requests = adminService.getAllAdminRequest(serviceAdmin);
 
         try {
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 
             printWriter.println(requests.size());
-            printWriter.flush();
-            Car car;
             for (var request : requests) {
                 printWriter.println(request.getId());
-                printWriter.flush();
-
                 printWriter.println(request.getDescription());
-                printWriter.flush();
-
                 printWriter.println(request.getCar().getVINNumber());
-                printWriter.flush();
-
                 printWriter.println(request.getCar().getRegNumber());
-                printWriter.flush();
-
                 printWriter.println(request.getCar().getBrand());
-                printWriter.flush();
-
                 printWriter.println(request.getCar().getModel());
-                printWriter.flush();
-
                 printWriter.println(request.getStatus());
-                printWriter.flush();
             }
 
         } catch (Exception e) {
@@ -50,9 +35,25 @@ public class AdminController {
         }
     }
 
-    public Request getCurrentAdminRequest(String login, String password, int id) {
+    public void getCurrentAdminRequest(Socket socket, String login, String password, int id) {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
-        return adminService.getCurrentAdminRequest(serviceAdmin, id);
+        Request request = adminService.getCurrentAdminRequest(serviceAdmin, id);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(request.getId());
+            printWriter.println(request.getDescription());
+            printWriter.println(request.getCar().getVINNumber());
+            printWriter.println(request.getCar().getRegNumber());
+            printWriter.println(request.getCar().getBrand());
+            printWriter.println(request.getCar().getModel());
+            printWriter.println(request.getStatus());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void acceptRequestForAdmin(String login, String password, int id) {
@@ -65,10 +66,47 @@ public class AdminController {
         adminService.acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
     }
 
-    //todo make a controller's functions send a date
     public void getChatsForAdmin(Socket socket, String login, String password) {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
         ArrayList<Chat> chats = adminService.getChatsForAdmin(serviceAdmin);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(chats.size());
+            for (Chat chat : chats) {
+                printWriter.println(chat.getId());
+                printWriter.println(chat.getCar().getVINNumber());
+                printWriter.println(chat.getCar().getRegNumber());
+                printWriter.println(chat.getCar().getModel());
+                printWriter.println(chat.getCar().getBrand());
+                printWriter.println(chat.getCarServiceName());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getCurrentChatForAdmin(Socket socket, String login, String password, int idChat) {
+        ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
+        Chat chat = adminService.getCurrentChatForAdmin(serviceAdmin, idChat);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(chat.getId());
+            printWriter.println(chat.getCar().getRegNumber());
+            printWriter.println(chat.getCarServiceName());
+            printWriter.println(chat.getMessages().size());
+
+            for (Message message : chat.getMessages()) {
+                printWriter.println(message.getMessage());
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendAdminMassage(String login, String password, int idChat, String message) {
