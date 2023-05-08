@@ -36,7 +36,7 @@ public class AdminService {
         adminDao.acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
     }
 
-        public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
+    public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
         return adminDao.getChatsForAdmin(serviceAdmin);
     }
 

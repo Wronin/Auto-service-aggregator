@@ -70,7 +70,7 @@ public class ActualRequest {
         jTable1.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
                 String name = (String) jTable1.getValueAt(jTable1.getSelectedRow(), 2);
-                CarService carService = clientController.getCarServiceByName(socket, name);
+                CarService carService = clientController.getCarServiceById(socket, 1);
                 CurrentAutoService currentAutoService = new CurrentAutoService(clientController, client, socket, carService, Integer.parseInt(jTable1.getValueAt(jTable1.getSelectedRow(), 0).toString()));
             }
         });

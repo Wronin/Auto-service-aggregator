@@ -1,32 +1,38 @@
 package service;
 
-import dao.ClientDao;
+import dao.*;
 import model.*;
 
 import java.util.ArrayList;
 
 public class ClientService {
-    private ClientDao clientDao = new ClientDao();
 
+    public static class ClientServiceSingle {
+        public static final ClientService INSTANCE = new ClientService();
+    }
+    public static final ClientService getInstance() {
+        return ClientService.ClientServiceSingle.INSTANCE;
+    }
     public ClientService() {
     }
 
     public void addCar(Client client, String brand, String model, String VINNumber, String regNumber) {
         Car car = new Car(VINNumber, regNumber, brand, model);
-        clientDao.addCar(client, car);
+        ClientDao.getInstance().addCar(client, car);
     }
 
+
     public void deleteCar(Client client, Car car) {
-        clientDao.deleteCar(client, car);
+        ClientDao.getInstance().deleteCar(client, car);
     }
 
     public void updateCarInformation(Client client, Car car, Car newCar) {
-        clientDao.updateCarInformation(client, car, newCar);
+        ClientDao.getInstance().updateCarInformation(client, car, newCar);
     }
 
     public Car getCar(Client client, String regNumber) {
 
-        ArrayList<Car> cars = clientDao.getCarList(client);
+        ArrayList<Car> cars = ClientDao.getInstance().getCarList(client);
         for (var car : cars) {
             if (car.getRegNumber().equals(regNumber))
                 return car;
@@ -36,35 +42,35 @@ public class ClientService {
     }
 
     public ArrayList<Car> getCarList(Client client) {
-        return clientDao.getCarList(client);
+        return ClientDao.getInstance().getCarList(client);
     }
 
     public ArrayList<Service> getAllServices() {
-        return clientDao.getAllServices();
+        return ClientDao.getInstance().getAllServices();
     }
     public void addRequest(Client client, String description, Car car, Status status) {
         Request request = new Request(client, description, car, status);
-        clientDao.addRequest(client, request);
+        ClientDao.getInstance().addRequest(client, request);
     }
 
     public void addRequestWithServices(Request request) {
-        clientDao.addRequestWithServices(request);
+        ClientDao.getInstance().addRequestWithServices(request);
     }
 
     public ArrayList<RequestForClient> getAllClientRequest(Client client) {
-        return clientDao.getAllClientRequest(client);
+        return ClientDao.getInstance().getAllClientRequest(client);
     }
 
     public ArrayList<AnswerAutoService> getAnswerAutoService(Client client) {
-        return clientDao.getAnswerAutoService(client);
+        return ClientDao.getInstance().getAnswerAutoService(client);
     }
 
     public CarService getCarServiceById(int id) {
-        ArrayList<CarService> carServices = clientDao.getCarServices();
+        ArrayList<CarService> carServices = ClientDao.getInstance().getCarServices();
 
         for (CarService carService : carServices) {
             if (carService.getId() == id) {
-                carService.setServices(removeDuplicates(clientDao.getCarServiceServicesById(id)));
+                carService.setServices(removeDuplicates(ClientDao.getInstance().getCarServiceServicesById(id)));
                 return carService;
             }
         }
@@ -93,27 +99,27 @@ public class ClientService {
         return newServices;
     }
     public void acceptRequestForClient(Client client, int idAnswer) {
-        clientDao.acceptRequestForClient(client, idAnswer);
-        clientDao.createChat(client, idAnswer);
+        ClientDao.getInstance().acceptRequestForClient(client, idAnswer);
+        ClientDao.getInstance().createChat(client, idAnswer);
     }
 
-    public void sendClientMassage(Client client, int idChat, String message) {
+    public void sendClientMessage(Client client, int idChat, String message) {
         message = "Client: " + message;
-        clientDao.sendClientMassage(client, idChat, message);
+        ClientDao.getInstance().sendClientMessage(client, idChat, message);
     }
     public ArrayList<Chat> getChatsForClient(Client client) {
-        ArrayList<Chat> chats = clientDao.getChatsForClient(client);
+        ArrayList<Chat> chats = ClientDao.getInstance().getChatsForClient(client);
 
         for (Chat chat : chats) {
-            chat.setMessages(clientDao.getMessagesByChatId(client, chat.getId()));
+            chat.setMessages(ClientDao.getInstance().getMessagesByChatId(client, chat.getId()));
         }
 
         return chats;
     }
 
     public Chat getCurrentChatForClient(Client client, int idChat) {
-        Chat chat = clientDao.getCurrentChatForClient(client, idChat);
-        chat.setMessages(clientDao.getMessagesByChatId(client, idChat));
+        Chat chat = ClientDao.getInstance().getCurrentChatForClient(client, idChat);
+        chat.setMessages(ClientDao.getInstance().getMessagesByChatId(client, idChat));
 
         return chat;
     }

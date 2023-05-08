@@ -10,7 +10,6 @@ public class Service {
         this.name = name;
         this.description = description;
     }
-
     public Service(int id) {
         this.id = id;
     }

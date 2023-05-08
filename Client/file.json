@@ -1,1 +1,1 @@
-{"password":"pas","VINNumber":"vin","regNumber":"regNum","func":"addCar","model":"X1","login":"log","brand":"BMW"}
+{"service size":2,"password":"pas","VINNumber":"123qwe","regNumber":"k111kk11","func":"addRequestWithServices","service":[{"name":null,"description":null,"id":1},{"name":null,"description":null,"id":2}],"model":"X1","login":"log","brand":"BMW"}

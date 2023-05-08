@@ -9,7 +9,6 @@ import org.json.simple.Jsoner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Network extends Thread {
@@ -44,7 +43,7 @@ public class Network extends Thread {
                 System.out.println(jsonObject.get("func"));
 
                 switch (jsonObject.get("func").toString()) {
-                    case "addCar" -> clientController.addCar(
+                    case "addCar" -> ClientController.getInstance().addCar(
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             (String) jsonObject.get("brand"),
@@ -52,23 +51,44 @@ public class Network extends Thread {
                             (String) jsonObject.get("VINNumber"),
                             (String) jsonObject.get("regNumber")
                     );
-                    case "getCarList" -> clientController.getCarList(
+                    case "deleteCar" -> ClientController.getInstance().deleteCar(
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            (String) jsonObject.get("brand"),
+                            (String) jsonObject.get("model"),
+                            (String) jsonObject.get("VINNumber"),
+                            (String) jsonObject.get("regNumber")
+                    );
+                    case "updateCarInformation" -> ClientController.getInstance().updateCarInformation(
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            (String) jsonObject.get("brand"),
+                            (String) jsonObject.get("model"),
+                            (String) jsonObject.get("VINNumber"),
+                            (String) jsonObject.get("regNumber"),
+                            (String) jsonObject.get("newBrand"),
+                            (String) jsonObject.get("newModel"),
+                            (String) jsonObject.get("newVINNumber"),
+                            (String) jsonObject.get("newRegNumber")
+
+                    );
+                    case "getCarList" -> ClientController.getInstance().getCarList(
                             socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password")
                     );
-                    case "getCarNumbers" -> clientController.getCarNumbers(
+                    case "getCarNumbers" -> ClientController.getInstance().getCarNumbers(
                             socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password")
                     );
-                    case "getCar" -> clientController.getCar(
+                    case "getCar" -> ClientController.getInstance().getCar(
                             socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             (String) jsonObject.get("regNumber")
                     );
-                    case "addRequest" -> clientController.addRequest(
+                    case "addRequest" -> ClientController.getInstance().addRequest(
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             (String) jsonObject.get("description"),
@@ -77,16 +97,32 @@ public class Network extends Thread {
                             (String) jsonObject.get("VINNumber"),
                             (String) jsonObject.get("regNumber")
                     );
-                    case "sendClientMassage" -> clientController.sendClientMassage(
+                    case "addRequestWithServices" -> ClientController.getInstance().addRequestWithServices(
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            (String) jsonObject.get("description"),
+                            (String) jsonObject.get("brand"),
+                            (String) jsonObject.get("model"),
+                            (String) jsonObject.get("VINNumber"),
+                            (String) jsonObject.get("regNumber"),
+                            ClientController.getInstance().getServicesFromClientRequest(jsonObject)
+                    );
+                    case "sendClientMessage" -> ClientController.getInstance().sendClientMessage(
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             jsonObject.getInteger("idChat"),
                             (String) jsonObject.get("message")
                     );
-                    case "getChatsForClient" -> clientController.getChatsForClient(
+                    case "getChatsForClient" -> ClientController.getInstance().getChatsForClient(
                             socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password")
+                    );
+                    case "getCurrentChatForClient" -> ClientController.getInstance().getCurrentChatForClient(
+                            socket,
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            jsonObject.getInteger("idChat")
                     );
                     case "getAllAdminRequest" -> adminController.getAllAdminRequest(
                             socket,
@@ -104,21 +140,21 @@ public class Network extends Thread {
                             (String) jsonObject.get("password"),
                             jsonObject.getInteger("id")
                     );
-                    case "getAllClientRequest" -> clientController.getAllClientRequest(
+                    case "getAllClientRequest" -> ClientController.getInstance().getAllClientRequest(
                             socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password")
                     );
-                    case "getAnswerAutoService" -> clientController.getAnswerAutoService(
+                    case "getAnswerAutoService" -> ClientController.getInstance().getAnswerAutoService(
                             socket,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password")
                     );
-                    case "getCarServiceByName" -> clientController.getCarServiceById(
+                    case "getCarServiceByName" -> ClientController.getInstance().getCarServiceById(
                             socket,
                             jsonObject.getInteger("id")
                     );
-                    case "acceptRequestForClient" -> clientController.acceptRequestForClient(
+                    case "acceptRequestForClient" -> ClientController.getInstance().acceptRequestForClient(
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             jsonObject.getInteger("idAnswer")
