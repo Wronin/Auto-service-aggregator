@@ -1,1 +1,1 @@
-{"password":"pas1","func":"sendAdminMassage","login":"log1","message":"message from admin test","idChat":1}
+{"password":"pas1","func":"changeStatusServiceRequest","idService":2,"idRequest":14,"login":"log1","status":"Waiting"}

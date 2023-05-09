@@ -175,9 +175,9 @@ public class Network extends Thread {
                     case "changeStatusServiceRequest" -> AdminController.getInstance().changeStatusServiceRequest(
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
-                            Integer.parseInt("idRequest"),
-                            Integer.parseInt("idService"),
-                            (Status) jsonObject.get("status")
+                            jsonObject.getInteger("idRequest"),
+                            jsonObject.getInteger("idService"),
+                            (String) jsonObject.get("status")
                     );
                     case "getChatsForAdmin" -> AdminController.getInstance().getChatsForAdmin(
                             socket,

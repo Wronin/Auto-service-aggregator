@@ -31,7 +31,7 @@ public class Main {
 //            ArrayList<Chat> chats = adminController.getChatsForAdmin(socket, "log1", "pas1");
 //            Chat chat = adminController.getCurrentChatForAdmin(socket, "log1", "pas1", 1);
             adminController.sendAdminMassage(socket, "log1", "pas1", 1, "message from admin test");
-//            adminController.changeStatusServiceRequest(socket, "log1", "pas1", 14, 1, Status.Waiting);
+            adminController.changeStatusServiceRequest(socket, "log1", "pas1", 14, 2, "Waiting");
             System.out.println("done");
 
 //            Application application = new Application(adminController, serviceAdmin, socket);

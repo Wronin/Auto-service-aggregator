@@ -216,7 +216,7 @@ public class AdminDao {
         }
     }
 
-    public void changeStatusServiceRequest(ServiceAdmin serviceAdmin, int idRequest, int idService, Status status) {
+    public void changeStatusServiceRequest(ServiceAdmin serviceAdmin, int idRequest, int idService, String status) {
         try {
             int statusServiceId = 0;
             resultSet = statement.executeQuery(String.format("select " +
@@ -233,11 +233,11 @@ public class AdminDao {
             while (resultSet.next()) {
                 statusServiceId = resultSet.getInt("status_service.id");
             }
-            String state = switch (status) {
-                case Waiting -> "Waiting";
-                default -> null;
-            };
-            statement.executeUpdate(String.format("update status_service set `status` = '%s' where id = '%d';", state, statusServiceId));
+//            String state = switch (status) {
+//                case Waiting -> "Waiting";
+//                default -> null;
+//            };
+            statement.executeUpdate(String.format("update status_service set `status` = '%s' where id = '%d';", status, statusServiceId));
         } catch (Exception e) {
             e.printStackTrace();
         }

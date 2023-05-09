@@ -104,7 +104,7 @@ public class AdminController {
         AdminService.getInstance().acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
     }
 
-    public void changeStatusServiceRequest(String login, String password, int idRequest, int idService, Status status) {
+    public void changeStatusServiceRequest(String login, String password, int idRequest, int idService, String status) {
         ServiceAdmin serviceAdmin = new ServiceAdmin(login, password);
         AdminDao.getInstance().changeStatusServiceRequest(serviceAdmin, idRequest, idService, status);
     }

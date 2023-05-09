@@ -36,7 +36,7 @@ public class AdminService {
         AdminDao.getInstance().acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
     }
 
-    public void changeStatusServiceRequest(ServiceAdmin serviceAdmin, int idRequest, int idService, Status status) {
+    public void changeStatusServiceRequest(ServiceAdmin serviceAdmin, int idRequest, int idService, String status) {
         AdminDao.getInstance().changeStatusServiceRequest(serviceAdmin, idRequest, idService, status);
     }
 

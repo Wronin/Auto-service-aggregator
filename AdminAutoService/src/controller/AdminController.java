@@ -150,7 +150,7 @@ public class AdminController {
         }
     }
 
-    public void changeStatusServiceRequest(Socket socket, String login, String password, int idRequest, int idService, Status status) {
+    public void changeStatusServiceRequest(Socket socket, String login, String password, int idRequest, int idService, String status) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("func", "changeStatusServiceRequest");
         jsonObject.put("login", login);
