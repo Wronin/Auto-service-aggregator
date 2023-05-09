@@ -3,6 +3,8 @@ package network;
 import controller.AdminController;
 import controller.ClientController;
 import model.Client;
+import model.Service;
+import model.Status;
 import org.json.simple.JsonObject;
 import org.json.simple.Jsoner;
 
@@ -10,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Network extends Thread {
     private final Client client;
@@ -98,14 +101,14 @@ public class Network extends Thread {
                             (String) jsonObject.get("regNumber")
                     );
                     case "addRequestWithServices" -> ClientController.getInstance().addRequestWithServices(
+                            bufferedReader,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             (String) jsonObject.get("description"),
                             (String) jsonObject.get("brand"),
                             (String) jsonObject.get("model"),
                             (String) jsonObject.get("VINNumber"),
-                            (String) jsonObject.get("regNumber"),
-                            ClientController.getInstance().getServicesFromClientRequest(jsonObject)
+                            (String) jsonObject.get("regNumber")
                     );
                     case "sendClientMessage" -> ClientController.getInstance().sendClientMessage(
                             (String) jsonObject.get("login"),
@@ -123,22 +126,6 @@ public class Network extends Thread {
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
                             jsonObject.getInteger("idChat")
-                    );
-                    case "getAllAdminRequest" -> adminController.getAllAdminRequest(
-                            socket,
-                            (String) jsonObject.get("login"),
-                            (String) jsonObject.get("password")
-                    );
-                    case "getCurrentRequest" -> adminController.getCurrentAdminRequest(
-                            socket,
-                            (String) jsonObject.get("login"),
-                            (String) jsonObject.get("password"),
-                            jsonObject.getInteger("id")
-                    );
-                    case "acceptRequestForAdmin" -> adminController.acceptRequestForAdmin(
-                            (String) jsonObject.get("login"),
-                            (String) jsonObject.get("password"),
-                            jsonObject.getInteger("id")
                     );
                     case "getAllClientRequest" -> ClientController.getInstance().getAllClientRequest(
                             socket,
@@ -159,11 +146,71 @@ public class Network extends Thread {
                             (String) jsonObject.get("password"),
                             jsonObject.getInteger("idAnswer")
                     );
+                    case "getRequests" -> AdminController.getInstance().getRequests(
+                            socket,
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password")
+                    );
+                    case "getAllAdminRequest" -> AdminController.getInstance().getAllAdminRequest(
+                            socket,
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password")
+                    );
+                    case "getCurrentAdminRequest" -> AdminController.getInstance().getCurrentAdminRequest(
+                            socket,
+                            jsonObject.getInteger("id")
+                    );
+                    case "acceptRequestForAdmin" -> AdminController.getInstance().acceptRequestForAdmin(
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            jsonObject.getInteger("id")
+                    );
+                    case "acceptRequestForAdminWithServices" ->
+                            AdminController.getInstance().acceptRequestForAdminWithServices(
+                                    bufferedReader,
+                                    (String) jsonObject.get("login"),
+                                    (String) jsonObject.get("password"),
+                                    jsonObject.getInteger("idRequest")
+                            );
+                    case "changeStatusServiceRequest" -> AdminController.getInstance().changeStatusServiceRequest(
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            Integer.parseInt("idRequest"),
+                            Integer.parseInt("idService"),
+                            (Status) jsonObject.get("status")
+                    );
+                    case "getChatsForAdmin" -> AdminController.getInstance().getChatsForAdmin(
+                            socket,
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password")
+                    );
+                    case "getCurrentChatForAdmin" -> AdminController.getInstance().getCurrentChatForAdmin(
+                            socket,
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            jsonObject.getInteger("idChat")
+                    );
+                    case "sendAdminMassage" -> AdminController.getInstance().sendAdminMassage(
+                            (String) jsonObject.get("login"),
+                            (String) jsonObject.get("password"),
+                            jsonObject.getInteger("idChat"),
+                            (String) jsonObject.get("message")
+                    );
                     default -> throw new IllegalStateException("Unexpected value: " + jsonObject.get("func"));
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<Service> getServicesFromClientRequest(JsonObject jsonObject) {
+        ArrayList<Service> services = new ArrayList<>();
+
+        for (int i = 0; i < jsonObject.getInteger("service size"); i++) {
+            services.add(new Service(jsonObject.getInteger("id"), jsonObject.getString("name"), jsonObject.getString("description")));
+        }
+
+        return services;
     }
 }

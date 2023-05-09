@@ -3,13 +3,12 @@ package model;
 import java.security.PrivateKey;
 
 public class Request {
+    private int id;
     private ServiceAdmin serviceAdmin;
     private String description;
     private Car car;
     private Status status;
-
     private String statusString;
-    private int id;
 
     public Request(ServiceAdmin serviceAdmin, String description, Car car, Status status) {
         this.serviceAdmin = serviceAdmin;

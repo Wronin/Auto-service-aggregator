@@ -1,5 +1,7 @@
 package model;
 
 public enum Status {
-    SEARCH
+    SEARCH,
+    Accept,
+    Waiting
 }

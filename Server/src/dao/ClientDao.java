@@ -9,7 +9,7 @@ public class ClientDao {
     public static class ClientDaoSingle {
         public static final ClientDao INSTANCE = new ClientDao();
     }
-    public static final ClientDao getInstance() {
+    public static ClientDao getInstance() {
         return ClientDaoSingle.INSTANCE;
     }
     private Statement statement;

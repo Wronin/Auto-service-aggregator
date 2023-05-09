@@ -10,7 +10,7 @@ public class ClientService {
     public static class ClientServiceSingle {
         public static final ClientService INSTANCE = new ClientService();
     }
-    public static final ClientService getInstance() {
+    public static ClientService getInstance() {
         return ClientService.ClientServiceSingle.INSTANCE;
     }
     public ClientService() {
@@ -104,7 +104,7 @@ public class ClientService {
     }
 
     public void sendClientMessage(Client client, int idChat, String message) {
-        message = "Client: " + message;
+        message = String.format("Client: '%s'", message);
         ClientDao.getInstance().sendClientMessage(client, idChat, message);
     }
     public ArrayList<Chat> getChatsForClient(Client client) {

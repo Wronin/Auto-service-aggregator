@@ -1,8 +1,15 @@
 import controller.AdminController;
 import controller.ClientController;
+import dao.AdminDao;
+import dao.ClientDao;
 import dao.NetworkDao;
+import model.Chat;
 import model.Client;
+import model.ServiceAdmin;
+import model.Status;
 import network.Network;
+import service.AdminService;
+import service.ClientService;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -18,10 +25,7 @@ public class Main {
             while (true) {
                 Socket socket = serverSocket.accept();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                Client client = new Client(
-                        bufferedReader.readLine(),
-                        bufferedReader.readLine()
-                );
+                Client client = new Client(bufferedReader.readLine(), bufferedReader.readLine());
                 Network network = new Network(client, socket, bufferedReader, clientController, adminController);
                 NetworkDao.getInstance().addServerThread(network);
                 network.start();

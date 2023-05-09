@@ -28,7 +28,7 @@ public class Main {
 //            ArrayList<String> carsNumbers = clientController.getCarNumbers(socket, "log", "pas");
 //            Car car = clientController.getCar(socket, "log", "pas", "regNum");
 //            clientController.addRequest(socket, "log", "pas", "description", "BMW", "X1", "vin", "regNum");
-//            clientController.addRequestWithServices(socket, "log", "pas", "BMW", "X1", "123qwe", "k111kk11", services);
+//            clientController.addRequestWithServices(socket, "log", "pas", "need backup", "BMW", "X1", "123qwe", "k111kk11", services);
 //            ArrayList<Chat> chats = clientController.getChatsForClient(socket, "log", "pas");
 //            Chat chat = clientController.getCurrentChatForClient(socket, "log", "pas", 1);
 //            clientController.sendClientMessage(socket, "log", "pas", 1, "test from client");

@@ -8,7 +8,7 @@ public class NetworkDao {
     public static class NetworkDaoSingle {
         public static final NetworkDao INSTANCE = new NetworkDao();
     }
-    public static final NetworkDao getInstance() {
+    public static NetworkDao getInstance() {
         return NetworkDaoSingle.INSTANCE;
     }
     private ArrayList<Network> threads = new ArrayList<>();

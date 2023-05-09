@@ -2,53 +2,57 @@ package service;
 
 import controller.ClientController;
 import dao.AdminDao;
-import model.Chat;
-import model.Request;
-import model.Service;
-import model.ServiceAdmin;
+import model.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class AdminService {
-    private AdminDao adminDao = new AdminDao();
+    public static class AdminServiceSingle {
+        public static final AdminService INSTANCE = new AdminService();
+    }
+    public static AdminService getInstance() {
+        return AdminService.AdminServiceSingle.INSTANCE;
+    }
     public AdminService() {
     }
 
+    public ArrayList<Request> getRequests(ServiceAdmin serviceAdmin){
+        return AdminDao.getInstance().getRequests(serviceAdmin);
+    }
     public ArrayList<Request> getAllAdminRequest(ServiceAdmin serviceAdmin) {
-        return adminDao.getAllAdminRequest(serviceAdmin);
+        return AdminDao.getInstance().getAllAdminRequest(serviceAdmin);
     }
 
-    public Request getCurrentAdminRequest(ServiceAdmin serviceAdmin, int id) {
-        ArrayList<Request> requests = adminDao.getAllAdminRequest(serviceAdmin);
-
-        for (var request : requests) {
-            if (request.getId() == id)
-                return request;
-        }
-        return new Request();
+    public Request getCurrentAdminRequest(int idRequest) {
+        return AdminDao.getInstance().getCurrentAdminRequest(idRequest);
     }
 
     public void acceptRequestForAdmin(ServiceAdmin serviceAdmin, int id) {
-        adminDao.acceptRequestForAdmin(serviceAdmin, id);
+        AdminDao.getInstance().acceptRequestForAdmin(serviceAdmin, id);
     }
 
     public void acceptRequestForAdminWithServices(ServiceAdmin serviceAdmin, int idRequest, ArrayList<Service> services) {
-        adminDao.acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
+        AdminDao.getInstance().acceptRequestForAdminWithServices(serviceAdmin, idRequest, services);
+    }
+
+    public void changeStatusServiceRequest(ServiceAdmin serviceAdmin, int idRequest, int idService, Status status) {
+        AdminDao.getInstance().changeStatusServiceRequest(serviceAdmin, idRequest, idService, status);
     }
 
     public ArrayList<Chat> getChatsForAdmin(ServiceAdmin serviceAdmin) {
-        return adminDao.getChatsForAdmin(serviceAdmin);
+        return AdminDao.getInstance().getChatsForAdmin(serviceAdmin);
     }
 
     public Chat getCurrentChatForAdmin(ServiceAdmin serviceAdmin, int idChat) {
-        Chat chat = adminDao.getCurrentChatForAdmin(serviceAdmin, idChat);
-        chat.setMessages(adminDao.getMessagesByChatId(serviceAdmin, idChat));
+        Chat chat = AdminDao.getInstance().getCurrentChatForAdmin(serviceAdmin, idChat);
+        chat.setMessages(AdminDao.getInstance().getMessagesByChatId(serviceAdmin, chat.getId()));
         return chat;
     }
 
     public void sendAdminMassage(ServiceAdmin serviceAdmin, int idChat, String message) {
         message =  String.format("Admin: %s", message);
-        adminDao.sendAdminMassage(serviceAdmin, idChat, message);
+        AdminDao.getInstance().sendAdminMassage(serviceAdmin, idChat, message);
     }
 
 

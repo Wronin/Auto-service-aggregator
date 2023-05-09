@@ -1,7 +1,6 @@
 package controller;
 
 import model.*;
-import org.json.simple.JsonObject;
 import service.ClientService;
 
 import java.io.*;
@@ -12,7 +11,7 @@ public class ClientController {
     public static class ClientControllerSingle {
         public static final ClientController INSTANCE = new ClientController();
     }
-    public static final ClientController getInstance() {
+    public static ClientController getInstance() {
         return ClientControllerSingle.INSTANCE;
     }
     public void addCar(String login, String password, String brand, String model, String VINNumber, String regNumber) {
@@ -92,9 +91,21 @@ public class ClientController {
         ClientService.getInstance().addRequest(client, description, car, Status.SEARCH);
     }
 
-    public void addRequestWithServices(String login, String password, String description, String brand, String model, String vin, String regNumber, ArrayList<Service> services) {
+    public void addRequestWithServices(BufferedReader bufferedReader, String login, String password, String description, String brand, String model, String vin, String regNumber) {
         Client client = new Client(login, password);
         Car car = new Car(vin, regNumber, brand, model);
+        ArrayList<Service> services = new ArrayList<>();
+
+        try {
+            int size = Integer.parseInt(bufferedReader.readLine());
+
+            for (int i = 0; i < size; i++) {
+                services.add(new Service(Integer.parseInt(bufferedReader.readLine()), bufferedReader.readLine(), bufferedReader.readLine()));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         Request request = new Request(client, description, car, services, Status.SEARCH);
         ClientService.getInstance().addRequestWithServices(request);
     }
@@ -217,15 +228,5 @@ public class ClientController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public ArrayList<Service> getServicesFromClientRequest(JsonObject jsonObject) {
-        ArrayList<Service> services = new ArrayList<>();
-
-        for (int i = 0; i < jsonObject.getInteger("service size"); i++) {
-            services.add(new Service(jsonObject.getInteger("id"), jsonObject.getString("name"), jsonObject.getString("description")));
-        }
-
-        return services;
     }
 }

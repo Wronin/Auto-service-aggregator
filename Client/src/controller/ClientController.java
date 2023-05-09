@@ -116,27 +116,16 @@ public class ClientController {
         }
     }
 
-    public void addRequestWithServices(Socket socket, String login, String password, String brand, String model, String vin, String regNumber, ArrayList<Service> services) {
+    public void addRequestWithServices(Socket socket, String login, String password, String description, String brand, String model, String vin, String regNumber, ArrayList<Service> services) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("func", "addRequestWithServices");
         jsonObject.put("login", login);
         jsonObject.put("password", password);
+        jsonObject.put("description", description);
         jsonObject.put("brand", brand);
         jsonObject.put("model", model);
         jsonObject.put("VINNumber", vin);
         jsonObject.put("regNumber", regNumber);
-
-        JsonArray array = new JsonArray();
-        for (Service service : services) {
-            JsonObject json = new JsonObject();
-            json.put("id", service.getId());
-            json.put("name", service.getName());
-            json.put("description", service.getDescription());
-            array.add(json);
-        }
-
-        jsonObject.put("service", array);
-        jsonObject.put("service size", array.size());
 
         File file = new File(System.getProperty("user.dir"), "file.json");
         try (FileWriter fileWriter = new FileWriter(file)) {
@@ -144,6 +133,13 @@ public class ClientController {
 
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             printWriter.println(jsonObject);
+
+            printWriter.println(services.size());
+            for (Service service : services) {
+                printWriter.println(service.getId());
+                printWriter.println(service.getName());
+                printWriter.println(service.getDescription());
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

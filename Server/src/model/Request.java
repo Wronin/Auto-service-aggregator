@@ -11,25 +11,6 @@ public class Request {
     private int id;
     private ArrayList<Service> services;
 
-    public Request(Client client, ServiceAdmin serviceAdmin, String description, Car car, Status status, int id, ArrayList<Service> services) {
-        this.client = client;
-        this.serviceAdmin = serviceAdmin;
-        this.description = description;
-        this.car = car;
-        this.status = status;
-        this.id = id;
-        this.services = services;
-    }
-
-
-    public Request(Client client, ServiceAdmin serviceAdmin, String description, Car car, Status status) {
-        this.client = client;
-        this.serviceAdmin = serviceAdmin;
-        this.description = description;
-        this.car = car;
-        this.status = status;
-    }
-
     public Request(Client client, String description, Car car, Status status) {
         this.client = client;
         this.description = description;
