@@ -38,7 +38,7 @@ public class Main {
 //            clientController.acceptRequest(socket, "log", "pas", 3);
 
             System.out.println("done");
-            //            Application application = new Application(clientController, client, socket);
+//                        Application application = new Application(clientController, client, socket);
 
         } catch (IOException e) {
             throw new RuntimeException(e);

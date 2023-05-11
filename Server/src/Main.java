@@ -26,6 +26,8 @@ public class Main {
                 Socket socket = serverSocket.accept();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 Client client = new Client(bufferedReader.readLine(), bufferedReader.readLine());
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+                printWriter.println("Yes");
                 Network network = new Network(client, socket, bufferedReader, clientController, adminController);
                 NetworkDao.getInstance().addServerThread(network);
                 network.start();
