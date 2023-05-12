@@ -1,30 +1,50 @@
 package model;
 
-public class Client {
-    private String login;
-    private String password;
+import java.net.Socket;
+
+public final class Client {
+    private static String login;
+    private static String password;
+    private static Socket socket;
 
     public Client(String login, String password) {
-        this.login = login;
-        this.password = password;
+        Client.login = login;
+        Client.password = password;
     }
+
 
     public Client() {
     }
 
-    public String getLogin() {
+    public Client(String login, String password, Socket socket) {
+        Client.login = login;
+        Client.password = password;
+        Client.socket = socket;
+    }
+
+    public static String getLogin() {
         return login;
     }
 
     public void setLogin(String login) {
-        this.login = login;
+        Client.login = login;
     }
 
-    public String getPassword() {
+    public static String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        Client.password = password;
     }
+
+    public static Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        Client.socket = socket;
+    }
+
+
 }

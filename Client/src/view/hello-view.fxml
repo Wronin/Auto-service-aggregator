@@ -9,21 +9,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <children>
-      <VBox alignment="CENTER" prefHeight="400.0" prefWidth="600.0">
+      <VBox alignment="CENTER" prefHeight="500.0" prefWidth="850.0">
          <children>
             <Label alignment="CENTER" contentDisplay="CENTER" text="Вход" />
             <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                <children>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                  <TextField fx:id="TextLogin" />
+                  <TextField fx:id="TextLogin" text="log" />
                </children>
             </HBox>
             <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                <children>
                   <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                  <PasswordField fx:id="TextPassword" />
+                  <PasswordField fx:id="TextPassword" text="pas" />
                </children>
             </HBox>
             <Button mnemonicParsing="false" onAction="#onHelloButtonClick" text="Войти" />

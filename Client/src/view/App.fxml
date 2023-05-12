@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ApplicationController">
+<AnchorPane prefHeight="400.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ApplicationController">
    <children>
-      <BorderPane fx:id="bp" prefHeight="400.0" prefWidth="600.0">
+      <BorderPane fx:id="bp" prefHeight="400.0" prefWidth="850.0">
          <left>
             <VBox prefHeight="400.0" prefWidth="211.0" BorderPane.alignment="CENTER">
                <children>
@@ -50,7 +50,7 @@
             </VBox>
          </left>
          <center>
-            <Pane fx:id="newPane" prefHeight="400.0" prefWidth="502.0" BorderPane.alignment="CENTER" />
+            <Pane fx:id="newPane" prefHeight="400.0" prefWidth="388.0" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
    </children>

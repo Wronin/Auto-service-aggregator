@@ -2,14 +2,19 @@ package controller;
 
 import model.*;
 import org.json.simple.JSONObject;
-import org.json.simple.JsonArray;
-import org.json.simple.JsonObject;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
 public class ClientController {
+
+    public static class ClientControllerSingle {
+        public static final ClientController INSTANCE = new ClientController();
+    }
+    public static ClientController getInstance() {
+        return ClientControllerSingle.INSTANCE;
+    }
     public void addCar(Socket socket, String login, String password, String brand, String model, String VINNumber, String regNumber) {
 
         JSONObject jsonObject = new JSONObject();
@@ -179,7 +184,7 @@ public class ClientController {
         return cars;
     }
 
-    public ArrayList<String> getCarNumbers(Socket socket, String login, String password) {
+    public String[] getCarNumbers(Socket socket, String login, String password) {
         ArrayList<String> carNumbers = new ArrayList<>();
         JSONObject jsonObject = new JSONObject();
 
@@ -209,7 +214,7 @@ public class ClientController {
             throw new RuntimeException(e);
         }
 
-        return carNumbers;
+        return carNumbers.toArray(new String[0]);
     }
 
     public Car getCar(Socket socket, String login, String password, String regNumber) {

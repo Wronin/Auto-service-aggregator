@@ -1,24 +1,27 @@
 import controller.ClientController;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import model.*;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class Main {
-    public static void main(String[] args) {
+public class Main extends Application {
+    public void start(Stage stage) {
         try {
-            ClientController clientController = new ClientController();
-            Client client = new Client();
-
-            Socket socket = new Socket("localhost", 3030);
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            printWriter.println("log");
-            printWriter.println("pas");
-
-            ArrayList<Service> services = new ArrayList<>();
-            services.add(new Service(1));
-            services.add(new Service(2));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/hello-view.fxml"));
+            Scene scene = new Scene(loader.load(), 850, 500);
+            stage.setTitle("Aggregator");
+            stage.setScene(scene);
+            stage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void main(String[] args)  {
 //            clientController.addCar(socket, "log", "pas", "BMW", "X1", "vin", "regNum");
 //            clientController.updateCarInformation(socket, "log", "pas", "BMW", "X1", "vin", "regNum", "Audi", "Q1", "newVin", "newReg");
 //            clientController.deleteCar(socket, "log", "pas", "Audi", "Q1", "newVin", "newReg");
@@ -36,12 +39,8 @@ public class Main {
 //            ArrayList<AnswerAutoService> answersAutoService = clientController.getAnswerAutoService(socket, "log", "pas");
 //            CarService carService = clientController.getCarServiceById(socket, 1);
 //            clientController.acceptRequest(socket, "log", "pas", 3);
+        launch();
 
-            System.out.println("done");
-//                        Application application = new Application(clientController, client, socket);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 }

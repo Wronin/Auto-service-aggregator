@@ -29,16 +29,15 @@ public class Controller {
     protected void onHelloButtonClick(ActionEvent e) {
         try {
             Socket socket = new Socket("localhost", 3030);
-            Client client = new Client(TextLogin.getText(), TextPassword.getText());
+            Client client = new Client(TextLogin.getText(), TextPassword.getText(), socket);
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            printWriter.println(client.getLogin());
-            printWriter.println(client.getPassword());
+            printWriter.println(Client.getLogin());
+            printWriter.println(Client.getPassword());
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String content = bufferedReader.readLine();
             System.out.println(content);
 
             if (content.equals("Yes")) {
-                System.out.println("Working Directory = " + System.getProperty("user.dir"));
                 root = FXMLLoader.load(getClass().getResource("../view/App.fxml"));
                 stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
                 scene = new Scene(root);

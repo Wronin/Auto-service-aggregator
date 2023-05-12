@@ -38,10 +38,10 @@ public class ClientController {
 
         try {
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            printWriter.println(car.getBrand());
-            printWriter.println(car.getModel());
             printWriter.println(car.getVINNumber());
             printWriter.println(car.getRegNumber());
+            printWriter.println(car.getBrand());
+            printWriter.println(car.getModel());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
