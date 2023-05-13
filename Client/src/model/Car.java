@@ -1,6 +1,7 @@
 package model;
 
 public class Car {
+    private int id;
     private String VINNumber;
     private String regNumber;
     private String brand;
@@ -11,6 +12,11 @@ public class Car {
         this.regNumber = regNumber;
         this.brand = brand;
         this.model = model;
+    }
+
+    public Car(int id, String brand) {
+        this.id = id;
+        this.brand = brand;
     }
 
     public Car() {
@@ -46,5 +52,9 @@ public class Car {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public int getId() {
+        return id;
     }
 }

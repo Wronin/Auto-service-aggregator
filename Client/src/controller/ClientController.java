@@ -4,6 +4,7 @@ import model.*;
 import org.json.simple.JSONObject;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -12,9 +13,11 @@ public class ClientController {
     public static class ClientControllerSingle {
         public static final ClientController INSTANCE = new ClientController();
     }
+
     public static ClientController getInstance() {
         return ClientControllerSingle.INSTANCE;
     }
+
     public void addCar(Socket socket, String login, String password, String brand, String model, String VINNumber, String regNumber) {
 
         JSONObject jsonObject = new JSONObject();
@@ -284,15 +287,40 @@ public class ClientController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String nameCarService = null, descriptionCarService = null;
+        CarService carService = new CarService();
         try {
+            int size = 0;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            nameCarService = bufferedReader.readLine();
-            descriptionCarService = bufferedReader.readLine();
+
+            carService = new CarService(
+                    bufferedReader.readLine(),
+                    bufferedReader.readLine()
+            );
+            size = Integer.parseInt(bufferedReader.readLine());
+            ArrayList<Service> services = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                services.add(
+                        new Service(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+
+            size = Integer.parseInt(bufferedReader.readLine());
+            ArrayList<String> brands = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                brands.add(bufferedReader.readLine());
+            }
+
+            carService.setServices(services);
+            carService.setBrands(brands);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new CarService(nameCarService, descriptionCarService);
+        return carService;
     }
 
     public void acceptRequest(Socket socket, String login, String password, int idAnswer) {
@@ -447,4 +475,157 @@ public class ClientController {
         return requests;
     }
 
+    public ArrayList<CarService> getCarServices(Socket socket) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "getCarServices");
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(jsonObject.toJSONString());
+            printWriter.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<CarService> carServices = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            int size = Integer.parseInt(bufferedReader.readLine());
+
+            for (int i = 0; i < size; i++) {
+                carServices.add(
+                        new CarService(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return carServices;
+    }
+
+    public ArrayList<Service> getAllServices(Socket socket) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "getAllServices");
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(jsonObject.toJSONString());
+            printWriter.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Service> services = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            int size = Integer.parseInt(bufferedReader.readLine());
+
+            for (int i = 0; i < size; i++) {
+                services.add(
+                        new Service(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return services;
+    }
+
+    public ArrayList<Car> getAllBrands(Socket socket) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "getAllBrands");
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(jsonObject.toJSONString());
+            printWriter.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<Car> brands = new ArrayList<>();
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            int size = Integer.parseInt(bufferedReader.readLine());
+
+            for (int i = 0; i < size; i++) {
+                brands.add(
+                        new Car(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return brands;
+    }
+
+    public ArrayList<CarService> getSearchResult(Socket socket, int idService, String brandName) {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("func", "getSearchResult");
+        jsonObject.put("idService", idService);
+        jsonObject.put("brandName", brandName);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+            printWriter.println(jsonObject.toJSONString());
+            printWriter.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<CarService> carServices = new ArrayList<>();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            int size1, size = Integer.parseInt(bufferedReader.readLine());
+            CarService carService;
+            for (int i = 0; i < size; i++) {
+                carService =
+                        new CarService(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        );
+
+                ArrayList<Service> services = new ArrayList<>();
+                size1 = Integer.parseInt(bufferedReader.readLine());
+                for (int j = 0; j < size1; j++) {
+                    services.add(
+                            new Service(
+                                    Integer.parseInt(bufferedReader.readLine()),
+                                    bufferedReader.readLine(),
+                                    bufferedReader.readLine()
+                            )
+                    );
+                }
+                ArrayList<String> brands = new ArrayList<>();
+                size1 = Integer.parseInt(bufferedReader.readLine());
+                for (int j = 0; j < size1; j++) {
+                    brands.add(bufferedReader.readLine());
+                }
+                carService.setServices(services);
+                carService.setBrands(brands);
+                carServices.add(carService);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return carServices;
+    }
 }
+

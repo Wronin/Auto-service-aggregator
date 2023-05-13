@@ -168,6 +168,18 @@ public class ClientController {
             printWriter.println(carService.getName());
             printWriter.println(carService.getSpecification());
 
+            printWriter.println(carService.getServices().size());
+            for (Service service : carService.getServices()) {
+                printWriter.println(service.getId());
+                printWriter.println(service.getName());
+                printWriter.println(service.getDescription());
+            }
+
+            printWriter.println(carService.getBrands().size());
+            for (Car brand : carService.getBrands()) {
+                printWriter.println(brand.getBrand());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -224,7 +236,83 @@ public class ClientController {
             for (Message message : chat.getMessages()) {
                 printWriter.println(message.getMessage());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void getCarServices(Socket socket) {
+        ArrayList<CarService> carServices = ClientService.getInstance().getCarServices();
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            printWriter.println(carServices.size());
+
+            for (CarService carService : carServices) {
+                printWriter.println(carService.getId());
+                printWriter.println(carService.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public void getAllServices(Socket socket) {
+        ArrayList<Service> services = ClientService.getInstance().getAllServices();
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(services.size());
+            for (Service service : services) {
+                printWriter.println(service.getId());
+                printWriter.println(service.getName());
+                printWriter.println(service.getDescription());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getAllBrands(Socket socket) {
+        ArrayList<Car> brands = ClientService.getInstance().getAllBrands();
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(brands.size());
+            for (Car car : brands) {
+                printWriter.println(car.getId());
+                printWriter.println(car.getBrand());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getSearchResult(Socket socket, String brandName, int idService) {
+        ArrayList<CarService> carServices = ClientService.getInstance().getSearchResult(brandName, idService);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(carServices.size());
+            for (CarService carService : carServices) {
+                printWriter.println(carService.getId());
+                printWriter.println(carService.getName());
+                printWriter.println(carService.getSpecification());
+
+                printWriter.println(carService.getServices().size());
+                for (Service service : carService.getServices()) {
+                    printWriter.println(service.getId());
+                    printWriter.println(service.getName());
+                    printWriter.println(service.getDescription());
+                }
+
+                printWriter.println(carService.getBrands().size());
+                for (Car brand : carService.getBrands()) {
+                    printWriter.println(brand.getBrand());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

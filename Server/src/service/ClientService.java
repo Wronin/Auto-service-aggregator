@@ -3,6 +3,7 @@ package service;
 import dao.*;
 import model.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class ClientService {
@@ -10,9 +11,11 @@ public class ClientService {
     public static class ClientServiceSingle {
         public static final ClientService INSTANCE = new ClientService();
     }
+
     public static ClientService getInstance() {
         return ClientService.ClientServiceSingle.INSTANCE;
     }
+
     public ClientService() {
     }
 
@@ -48,6 +51,11 @@ public class ClientService {
     public ArrayList<Service> getAllServices() {
         return ClientDao.getInstance().getAllServices();
     }
+
+    public ArrayList<Car> getAllBrands() {
+        return ClientDao.getInstance().getAllBrands();
+    }
+
     public void addRequest(Client client, String description, Car car, Status status) {
         Request request = new Request(client, description, car, status);
         ClientDao.getInstance().addRequest(client, request);
@@ -71,23 +79,75 @@ public class ClientService {
         for (CarService carService : carServices) {
             if (carService.getId() == id) {
                 carService.setServices(removeDuplicates(ClientDao.getInstance().getCarServiceServicesById(id)));
+                carService.setBrands(ClientDao.getInstance().getCarBrandFromCarService(id));
                 return carService;
             }
         }
         return new CarService();
     }
 
+    public ArrayList<CarService> getSearchResult(String brandName, int idService) {
+        ArrayList<CarService> carServices = ClientDao.getInstance().getCarServices();
+        ArrayList<CarService> resultSearch = new ArrayList<>();
+
+        for (CarService carService : carServices) {
+            carService.setServices(removeDuplicates(ClientDao.getInstance().getCarServiceServicesById(carService.getId()))); //todo fix removeDuplicates
+            carService.setBrands(ClientDao.getInstance().getCarBrandFromCarService(carService.getId()));
+        }
+
+        boolean serviceExist = false, brandExist = false;
+        if (!brandName.equals("") && idService != 0) {
+            for (CarService carService : carServices) {
+                for (Service service : carService.getServices()) {
+                    if (service.getId() == idService) {
+                        serviceExist = true;
+                        break;
+                    }
+                }
+                for (Car brand : carService.getBrands()) {
+                    if (brand.getBrand().equals(brandName)) {
+                        brandExist = true;
+                        break;
+                    }
+                }
+                if (serviceExist && brandExist) {
+                    resultSearch.add(carService);
+                }
+                serviceExist = false;
+                brandExist = false;
+            }
+        } else if (!brandName.equals("")) {
+            for (CarService carService : carServices) {
+                for (Car brand : carService.getBrands()) {
+                    if (brand.getBrand().equals(brandName)) {
+                        resultSearch.add(carService);
+                    }
+                }
+            }
+        } else if (idService != 0) {
+            for (CarService carService : carServices) {
+                for (Service service : carService.getServices()) {
+                    if (service.getId() == idService) {
+                        resultSearch.add(carService);
+                    }
+                }
+            }
+        }
+        return resultSearch;
+    }
+
+
     public ArrayList<Service> removeDuplicates(ArrayList<Service> services) {
         ArrayList<Service> newServices = new ArrayList<>();
         ArrayList<String> newServicesName = new ArrayList<>();
         ArrayList<String> names = new ArrayList<>();
 
-        for(Service service : services) {
+        for (Service service : services) {
             newServicesName.add(service.getName());
         }
 
-        for(String newServiceName : newServicesName) {
-            if(!names.contains(newServiceName)) {
+        for (String newServiceName : newServicesName) {
+            if (!names.contains(newServiceName)) {
                 names.add(newServiceName);
             }
         }
@@ -98,15 +158,17 @@ public class ClientService {
 
         return newServices;
     }
+
     public void acceptRequestForClient(Client client, int idAnswer) {
         ClientDao.getInstance().acceptRequestForClient(client, idAnswer);
         ClientDao.getInstance().createChat(client, idAnswer);
     }
 
     public void sendClientMessage(Client client, int idChat, String message) {
-        message = String.format("Client: '%s'", message);
+        message = String.format("Client: %s", message);
         ClientDao.getInstance().sendClientMessage(client, idChat, message);
     }
+
     public ArrayList<Chat> getChatsForClient(Client client) {
         ArrayList<Chat> chats = ClientDao.getInstance().getChatsForClient(client);
 
@@ -122,5 +184,9 @@ public class ClientService {
         chat.setMessages(ClientDao.getInstance().getMessagesByChatId(client, idChat));
 
         return chat;
+    }
+
+    public ArrayList<CarService> getCarServices() {
+        return ClientDao.getInstance().getCarServicesName();
     }
 }

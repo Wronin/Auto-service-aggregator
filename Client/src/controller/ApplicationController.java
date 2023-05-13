@@ -44,4 +44,32 @@ public class ApplicationController {
             e.printStackTrace();
         }
     }
+
+
+
+    public void openChatWindow(ActionEvent actionEvent) {
+        try {
+            Parent parent;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/chat.fxml"));
+            parent = loader.load();
+            ChatController chatController = loader.getController();
+            chatController.init();
+            bp.setCenter(parent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openFindWindow(ActionEvent actionEvent) {
+        try {
+            Parent parent;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/find.fxml"));
+            parent = loader.load();
+            FindController findController = loader.getController();
+            findController.init();
+            bp.setCenter(parent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

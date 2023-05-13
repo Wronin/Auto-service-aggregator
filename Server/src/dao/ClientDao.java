@@ -9,9 +9,11 @@ public class ClientDao {
     public static class ClientDaoSingle {
         public static final ClientDao INSTANCE = new ClientDao();
     }
+
     public static ClientDao getInstance() {
         return ClientDaoSingle.INSTANCE;
     }
+
     private Statement statement;
     private ResultSet resultSet;
 
@@ -128,7 +130,8 @@ public class ClientDao {
 
         return cars;
     }
-    public void addRequest(Client client, Request request){
+
+    public void addRequest(Client client, Request request) {
         try {
             int idAuto = 0;
             resultSet = statement.executeQuery(String.format("select " +
@@ -149,9 +152,9 @@ public class ClientDao {
             sql = String.format("insert into Request(`Description`, `auto_id`, `Status`) values('%s', '%d', '%s');", request.getDescription(), idAuto, request.getStatus());
             statement.executeUpdate(sql);
 
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void addRequestWithServices(Request request) {
@@ -213,6 +216,24 @@ public class ClientDao {
         }
 
         return services;
+    }
+
+    public ArrayList<Car> getAllBrands() {
+        ArrayList<Car> brands = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery("select brand.id, brand.name from brand;");
+            while (resultSet.next()) {
+                brands.add(
+                        new Car(
+                                resultSet.getInt("brand.id"),
+                                resultSet.getString("brand.name")
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return brands;
     }
 
     public ArrayList<RequestForClient> getAllClientRequest(Client client) {
@@ -316,6 +337,33 @@ public class ClientDao {
         return services;
     }
 
+    public ArrayList<Car> getCarBrandFromCarService(int idAutoService) {
+        ArrayList<Car> brands = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(String.format("select " +
+                    "brand.id, brand.name " +
+                    "from auto_service " +
+                    "join autoService_service on auto_service.id = autoService_service.auto_service_id " +
+                    "join model on autoService_service.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
+                    "where " +
+                    "auto_service.id = '%d' " +
+                    "group by 1;", idAutoService));
+
+            while (resultSet.next()) {
+                brands.add(
+                        new Car(
+                                resultSet.getInt("brand.id"),
+                                resultSet.getString("brand.name")
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return brands;
+    }
+
     public void acceptRequestForClient(Client client, int idAnswer) {
         try {
             int auto_service_id = 0, idRequest = 0, idAuto = 0;
@@ -400,7 +448,7 @@ public class ClientDao {
                     id = resultSet.getInt("chat.id");
                 }
             }
-            statement.executeUpdate(String.format("insert into message (`text`, `chat_id`) values ('%s', '%d');", message, id));
+            statement.executeUpdate(String.format("insert into message (`Text`, `chat_id`) values ('%s', '%d');", message, id));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -412,17 +460,16 @@ public class ClientDao {
 
         try {
             resultSet = statement.executeQuery(String.format("select " +
-                    "chat.id, auto.vin, auto.reg_number, brand.name, model.name, auto_service.name " +
-                    "from account " +
-                    "join auto on account.id = auto.account_id " +
-                    "join model on auto.model_id = model.id " +
-                    "join brand on model.brand_id = brand.id " +
-                    "join chat on auto.id = chat.auto_id " +
-                    "join message on chat.id = message.chat_id " +
-                    "join auto_service on chat.auto_service_id = auto_service.id " +
-                    "where " +
-                    "account.login = '%s' and account.password = '%s' " +
-                    "group by 5;", client.getLogin(), client.getPassword())
+                            "chat.id, auto.vin, auto.reg_number, brand.name, model.name, auto_service.name " +
+                            "from account " +
+                            "join auto on account.id = auto.account_id " +
+                            "join model on auto.model_id = model.id " +
+                            "join brand on model.brand_id = brand.id " +
+                            "join chat on auto.id = chat.auto_id " +
+                            "join auto_service on chat.auto_service_id = auto_service.id " +
+                            "where " +
+                            "account.login = '%s' and account.password = '%s';",
+                    client.getLogin(), client.getPassword())
             );
 
             while (resultSet.next()) {
@@ -503,5 +550,26 @@ public class ClientDao {
             e.printStackTrace();
         }
         return chat;
+    }
+
+    public ArrayList<CarService> getCarServicesName() {
+        ArrayList<CarService> carServices = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery("select " +
+                    "auto_service.id, auto_service.name " +
+                    "from auto_service;");
+
+            while (resultSet.next()) {
+                carServices.add(
+                        new CarService(
+                                resultSet.getInt("auto_service.id"),
+                                resultSet.getString("auto_service.name")
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return carServices;
     }
 }

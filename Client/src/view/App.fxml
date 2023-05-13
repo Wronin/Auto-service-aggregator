@@ -24,7 +24,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="174.0" text="Поиск автосервиса" />
+                        <Button mnemonicParsing="false" onAction="#openFindWindow" prefHeight="30.0" prefWidth="174.0" text="Поиск автосервиса" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -42,7 +42,7 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="174.0" text="Чат" />
+                        <Button mnemonicParsing="false" onAction="#openChatWindow" prefHeight="30.0" prefWidth="174.0" text="Чат" />
                      </children>
                   </HBox>
                   <Pane prefHeight="200.0" prefWidth="200.0" />
@@ -50,7 +50,7 @@
             </VBox>
          </left>
          <center>
-            <Pane fx:id="newPane" prefHeight="400.0" prefWidth="388.0" BorderPane.alignment="CENTER" />
+            <Pane fx:id="newPane" prefHeight="450.0" prefWidth="650.0" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
    </children>

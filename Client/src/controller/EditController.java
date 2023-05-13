@@ -55,7 +55,6 @@ public class EditController {
             Parent parent = loader.load();
             ApplicationController applicationController = loader.getController();
             applicationController.backFromEdit(actionEvent);
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
