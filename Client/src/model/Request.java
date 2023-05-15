@@ -1,11 +1,20 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Request {
     private Client client;
     private String description;
     private Car car;
     private Status status;
     private int id;
+    private ArrayList<Service> services;
+
+    public Request(String description, Car car, ArrayList<Service> services) {
+        this.description = description;
+        this.car = car;
+        this.services = services;
+    }
 
     public Request(Client client, String description, Car car, Status status) {
         this.client = client;
@@ -13,13 +22,13 @@ public class Request {
         this.car = car;
         this.status = status;
     }
-
     public Request(int id, String description, Car car, Status status) {
         this.id = id;
         this.description = description;
         this.car = car;
         this.status = status;
     }
+
 
     public Request() {
     }
@@ -62,5 +71,13 @@ public class Request {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public ArrayList<Service> getServices() {
+        return services;
+    }
+
+    public void setServices(ArrayList<Service> services) {
+        this.services = services;
     }
 }

@@ -27,7 +27,7 @@ public class FindController {
     public void init() {
         ArrayList<CarService> carServices = ClientController.getInstance().getCarServices(Client.getSocket());
         String[] names = new String[carServices.size()];
-        for (int i = 0;i < carServices.size(); i++) {
+        for (int i = 0; i < carServices.size(); i++) {
             names[i] = carServices.get(i).getName();
         }
         ObservableList<String> item = FXCollections.observableArrayList(names);
@@ -42,11 +42,13 @@ public class FindController {
                         idCarService = currentId;
                     }
                 }
-                CarService carService = ClientController.getInstance().getCarServiceById(Client.getSocket(), idCarService);
-                nameLabel.setText(carService.getName());
-                descriptionLabel.setText(carService.getSpecification());
-                brandLabel.setText(carService.arrayBrandToString());
-                serviceLabel.setText(carService.arrayServiceToString());
+                if (newValue != null) {
+                    CarService carService = ClientController.getInstance().getCarServiceById(Client.getSocket(), idCarService);
+                    nameLabel.setText(carService.getName());
+                    descriptionLabel.setText(carService.getSpecification());
+                    brandLabel.setText(carService.arrayBrandToString());
+                    serviceLabel.setText(carService.arrayServiceToString());
+                }
             }
         });
 
@@ -68,7 +70,7 @@ public class FindController {
     }
 
     public void onFindButtonPressed(ActionEvent actionEvent) {
-        int idBrand = 0, idService = 0;
+        int idService = 0;
         String tmp = serviceComboBox.getSelectionModel().getSelectedItem();
         ArrayList<Service> services = ClientController.getInstance().getAllServices(Client.getSocket());
 
@@ -80,7 +82,7 @@ public class FindController {
 
         ArrayList<CarService> resultSearch = ClientController.getInstance().getSearchResult(Client.getSocket(), idService, carComboBox.getSelectionModel().getSelectedItem());
         String[] names = new String[resultSearch.size()];
-        for (int i = 0;i < resultSearch.size(); i++) {
+        for (int i = 0; i < resultSearch.size(); i++) {
             names[i] = resultSearch.get(i).getName();
         }
         ObservableList<String> item = FXCollections.observableArrayList(names);

@@ -8,11 +8,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ApplicationController">
+<AnchorPane prefHeight="400.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ApplicationController">
    <children>
-      <BorderPane fx:id="bp" prefHeight="400.0" prefWidth="850.0">
+      <BorderPane fx:id="bp" prefHeight="400.0" prefWidth="900.0">
          <left>
-            <VBox prefHeight="400.0" prefWidth="211.0" BorderPane.alignment="CENTER">
+            <VBox prefHeight="400.0" prefWidth="210.0" BorderPane.alignment="CENTER">
                <children>
                   <Pane prefHeight="200.0" prefWidth="200.0" />
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -30,13 +30,13 @@
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="174.0" text="Создать заявку" />
+                        <Button mnemonicParsing="false" onAction="#openCreateRequestWindow" prefHeight="30.0" prefWidth="174.0" text="Создать заявку" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" />
-                        <Button mnemonicParsing="false" prefHeight="30.0" prefWidth="174.0" text="Показать заявки" />
+                        <Button mnemonicParsing="false" onAction="#openShowRequestWindow" prefHeight="30.0" prefWidth="174.0" text="Показать заявки" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
@@ -50,7 +50,7 @@
             </VBox>
          </left>
          <center>
-            <Pane fx:id="newPane" prefHeight="450.0" prefWidth="650.0" BorderPane.alignment="CENTER" />
+            <Pane fx:id="newPane" prefHeight="400.0" prefWidth="690.0" BorderPane.alignment="CENTER" />
          </center>
       </BorderPane>
    </children>

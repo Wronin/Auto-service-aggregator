@@ -70,7 +70,17 @@ public class ClientService {
     }
 
     public ArrayList<AnswerAutoService> getAnswerAutoService(Client client) {
-        return ClientDao.getInstance().getAnswerAutoService(client);
+        ArrayList<AnswerAutoService> answerAutoServices = ClientDao.getInstance().getAnswerAutoService(client);
+        ArrayList<AnswerAutoService> answerAutoServicesWitsServices = ClientDao.getInstance().getAllServicesForAnswerAutoService(client);
+        for (AnswerAutoService answerAutoService : answerAutoServices) {
+            for (AnswerAutoService service : answerAutoServicesWitsServices) {
+                if (answerAutoService.getIdRequest() == service.getIdRequest()) {
+                    answerAutoService.setServices(service.getServices());
+                }
+            }
+        }
+
+        return answerAutoServices;
     }
 
     public CarService getCarServiceById(int id) {
@@ -91,7 +101,7 @@ public class ClientService {
         ArrayList<CarService> resultSearch = new ArrayList<>();
 
         for (CarService carService : carServices) {
-            carService.setServices(removeDuplicates(ClientDao.getInstance().getCarServiceServicesById(carService.getId()))); //todo fix removeDuplicates
+            carService.setServices(ClientDao.getInstance().getCarServiceServicesById(carService.getId()));
             carService.setBrands(ClientDao.getInstance().getCarBrandFromCarService(carService.getId()));
         }
 

@@ -11,9 +11,11 @@ public class ClientController {
     public static class ClientControllerSingle {
         public static final ClientController INSTANCE = new ClientController();
     }
+
     public static ClientController getInstance() {
         return ClientControllerSingle.INSTANCE;
     }
+
     public void addCar(String login, String password, String brand, String model, String VINNumber, String regNumber) {
         Client client = new Client(login, password);
         ClientService.getInstance().addCar(client, brand, model, VINNumber, regNumber);
@@ -121,7 +123,10 @@ public class ClientController {
 
             for (var request : requests) {
                 printWriter.println(request.getId());
-                printWriter.println(request.getRegNumber());
+                printWriter.println(request.getCar().getVINNumber());
+                printWriter.println(request.getCar().getRegNumber());
+                printWriter.println(request.getCar().getBrand());
+                printWriter.println(request.getCar().getModel());
                 printWriter.println(request.getDescription());
                 printWriter.println(request.getName());
                 printWriter.println(request.getStatus());
@@ -149,9 +154,17 @@ public class ClientController {
             printWriter.println(answers.size());
             for (var request : answers) {
                 printWriter.println(request.getId());
+                printWriter.println(request.getIdAutoService());
+                printWriter.println(request.getIdRequest());
                 printWriter.println(request.getRegNumber());
                 printWriter.println(request.getName());
                 printWriter.println(request.getStatus());
+                printWriter.println(request.getServices().size());
+                for (Service service : request.getServices()) {
+                    printWriter.println(service.getId());
+                    printWriter.println(service.getName());
+                    printWriter.println(service.getDescription());
+                }
             }
 
         } catch (Exception e) {
@@ -218,7 +231,7 @@ public class ClientController {
 
     }
 
-    public void getCurrentChatForClient(Socket socket ,String login, String password, int idChat) {
+    public void getCurrentChatForClient(Socket socket, String login, String password, int idChat) {
         Client client = new Client(login, password);
         Chat chat = ClientService.getInstance().getCurrentChatForClient(client, idChat);
 
@@ -256,6 +269,7 @@ public class ClientController {
             e.printStackTrace();
         }
     }
+
     public void getAllServices(Socket socket) {
         ArrayList<Service> services = ClientService.getInstance().getAllServices();
 

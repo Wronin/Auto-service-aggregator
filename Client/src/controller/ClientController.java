@@ -264,9 +264,32 @@ public class ClientController {
         try {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             String content = bufferedReader.readLine();
-
+            int serviceSize;
             for (int i = 0; i < Integer.parseInt(content); i++) {
-                answers.add(new AnswerAutoService(Integer.parseInt(bufferedReader.readLine()), bufferedReader.readLine(), bufferedReader.readLine(), bufferedReader.readLine()));
+                answers.add(
+                        new AnswerAutoService(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                Integer.parseInt(bufferedReader.readLine()),
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        )
+                );
+                serviceSize = Integer.parseInt(bufferedReader.readLine());
+                if (serviceSize != 0) {
+                    ArrayList<Service> services = new ArrayList<>();
+                    for (int j = 0; j < serviceSize; j++) {
+                        services.add(
+                                new Service(
+                                        Integer.parseInt(bufferedReader.readLine()),
+                                        bufferedReader.readLine(),
+                                        bufferedReader.readLine()
+                                )
+                        );
+                    }
+                    answers.get(i).setServices(services);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -447,12 +470,15 @@ public class ClientController {
             int sizeServices = 0;
 
             RequestForClient requestForClient;
-            ArrayList<Service> services = new ArrayList<>();
-
             for (int i = 0; i < sizeRequests; i++) {
                 requestForClient = new RequestForClient(
                         Integer.parseInt(bufferedReader.readLine()),
-                        bufferedReader.readLine(),
+                        new Car(
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        ),
                         bufferedReader.readLine(),
                         bufferedReader.readLine(),
                         bufferedReader.readLine(),

@@ -1,15 +1,8 @@
 import controller.AdminController;
 import controller.ClientController;
-import dao.AdminDao;
-import dao.ClientDao;
-import dao.NetworkDao;
-import model.Chat;
-import model.Client;
-import model.ServiceAdmin;
-import model.Status;
+import model.*;
 import network.Network;
-import service.AdminService;
-import service.ClientService;
+import dao.NetworkDao;
 
 import java.io.*;
 import java.net.ServerSocket;

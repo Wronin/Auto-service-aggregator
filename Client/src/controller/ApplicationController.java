@@ -36,7 +36,7 @@ public class ApplicationController {
     public void backFromEdit(ActionEvent actionEvent) {
         try {
             Parent parent = FXMLLoader.load(getClass().getResource("../view/App.fxml"));
-            stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
+            stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             scene = new Scene(parent);
             stage.setScene(scene);
             stage.show();
@@ -44,7 +44,6 @@ public class ApplicationController {
             e.printStackTrace();
         }
     }
-
 
 
     public void openChatWindow(ActionEvent actionEvent) {
@@ -67,6 +66,32 @@ public class ApplicationController {
             parent = loader.load();
             FindController findController = loader.getController();
             findController.init();
+            bp.setCenter(parent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openCreateRequestWindow(ActionEvent actionEvent) {
+        try {
+            Parent parent;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/createRequest.fxml"));
+            parent = loader.load();
+            CreateRequestController createRequestController = loader.getController();
+            createRequestController.init();
+            bp.setCenter(parent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openShowRequestWindow(ActionEvent actionEvent) {
+        try {
+            Parent parent;
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/showRequest.fxml"));
+            parent = loader.load();
+            ShowRequestController showRequestController = loader.getController();
+            showRequestController.init();
             bp.setCenter(parent);
         } catch (Exception e) {
             e.printStackTrace();

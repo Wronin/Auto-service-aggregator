@@ -56,7 +56,7 @@ public class ChatController {
                 idChat = currentId;
             }
         }
-//        ClientController.getInstance().sendClientMessage(Client.getSocket(), Client.getLogin(), Client.getPassword(), idChat, messageTextField.getText());
+        ClientController.getInstance().sendClientMessage(Client.getSocket(), Client.getLogin(), Client.getPassword(), idChat, messageTextField.getText());
         Chat currentChat = ClientController.getInstance().getCurrentChatForClient(Client.getSocket(), Client.getLogin(), Client.getPassword(), idChat);
         textArea.setText(currentChat.getMessagesToString(currentChat.getMessages()));
         messageTextField.setText("");
