@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -29,6 +30,7 @@ public class ShowRequestController {
     public ArrayList<RequestForClient> currentRequest;
     public ArrayList<AnswerAutoService> answerAutoServices;
     public ArrayList<AnswerAutoService> currentAnswerAutoServices;
+    public AnswerAutoService answerAutoServiceForSend;
 
     public void init() {
         answerAutoServices = ClientController.getInstance().getAnswerAutoService(Client.getSocket(), Client.getLogin(), Client.getPassword());
@@ -80,6 +82,18 @@ public class ShowRequestController {
             }
         });
 
+        answerRequestListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                int currentAnswerId = answerRequestListView.getSelectionModel().getSelectedIndex();
+                if (newValue != null) {
+                    servicesLabel.setText(currentAnswerAutoServices.get(currentAnswerId).getServicesFromArray());
+                    autoServiceNameLabel.setText(currentAnswerAutoServices.get(currentAnswerId).getName());
+                    answerAutoServiceForSend = currentAnswerAutoServices.get(currentAnswerId);
+                }
+            }
+        });
+
         items = new String[4];
         items[0] = "";
         items[1] = "Поиск";
@@ -127,5 +141,12 @@ public class ShowRequestController {
                 requestListView.setItems(regNumbers);
             }
         });
+    }
+
+    public void acceptAnswer(ActionEvent actionEvent) {
+        ClientController.getInstance().acceptRequest(Client.getSocket(), Client.getLogin(), Client.getPassword(), answerAutoServiceForSend.getIdAutoService(), answerAutoServiceForSend.getIdRequest(), answerAutoServiceForSend.getServices());
+    }
+
+    public void denyAnswer(ActionEvent actionEvent) {
     }
 }

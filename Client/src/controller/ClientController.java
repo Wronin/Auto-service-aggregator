@@ -310,7 +310,7 @@ public class ClientController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        CarService carService = new CarService();
+        CarService carService;
         try {
             int size = 0;
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -346,16 +346,24 @@ public class ClientController {
         return carService;
     }
 
-    public void acceptRequest(Socket socket, String login, String password, int idAnswer) {
+    public void acceptRequest(Socket socket, String login, String password, int idAuto_service, int idRequest, ArrayList<Service> services) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("func", "acceptRequestForClient");
         jsonObject.put("login", login);
         jsonObject.put("password", password);
-        jsonObject.put("idAnswer", idAnswer);
+        jsonObject.put("idAuto_service", idAuto_service);
+        jsonObject.put("idRequest", idRequest);
 
         try {
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
             printWriter.println(jsonObject.toJSONString());
+
+            printWriter.println(services.size());
+            for (Service service : services) {
+                printWriter.println(service.getId());
+                printWriter.println(service.getName());
+                printWriter.println(service.getDescription());
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

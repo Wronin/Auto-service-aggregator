@@ -169,9 +169,9 @@ public class ClientService {
         return newServices;
     }
 
-    public void acceptRequestForClient(Client client, int idAnswer) {
-        ClientDao.getInstance().acceptRequestForClient(client, idAnswer);
-        ClientDao.getInstance().createChat(client, idAnswer);
+    public void acceptRequestForClient(Client client, int idAuto_service, int idRequest, ArrayList<Service> services) {
+        ClientDao.getInstance().acceptRequestForClient(client, idAuto_service, idRequest, services);
+        ClientDao.getInstance().createChat(client, idAuto_service); //todo fix it
     }
 
     public void sendClientMessage(Client client, int idChat, String message) {

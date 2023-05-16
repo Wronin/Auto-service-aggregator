@@ -94,4 +94,15 @@ public class AnswerAutoService {
     public void setServices(ArrayList<Service> services) {
         this.services = services;
     }
+
+    public String getServicesFromArray() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Service service : services) {
+            if (!service.getName().equals("null")) {
+                stringBuilder.append(service.getName());
+                stringBuilder.append(" ");
+            }
+        }
+        return stringBuilder.toString();
+    }
 }

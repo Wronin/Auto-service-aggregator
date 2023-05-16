@@ -1,5 +1,6 @@
 import controller.AdminController;
 import controller.ClientController;
+import controller.NetworkController;
 import model.*;
 import network.Network;
 import dao.NetworkDao;
@@ -18,12 +19,35 @@ public class Main {
             while (true) {
                 Socket socket = serverSocket.accept();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                Client client = new Client(bufferedReader.readLine(), bufferedReader.readLine());
                 PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-                printWriter.println("Yes");
-                Network network = new Network(client, socket, bufferedReader, clientController, adminController);
-                NetworkDao.getInstance().addServerThread(network);
-                network.start();
+                Client client;
+                boolean authorization = false;
+
+                while (!authorization) {
+                    String action = bufferedReader.readLine();
+                    client = new Client(bufferedReader.readLine(), bufferedReader.readLine());
+                    if (action.equals("Client authorization")) {
+                        if (NetworkController.getInstance().authorization(client)) {
+                            Network network = new Network(client, socket, bufferedReader, clientController, adminController);
+                            NetworkDao.getInstance().addServerThread(network);
+                            network.start();
+                            authorization = true;
+                            printWriter.println("Yes");
+                        } else {
+                            printWriter.println("error");
+                        }
+                    } else if (action.equals("Client registration")) {
+                        if (NetworkController.getInstance().registration(client)) {
+                            Network network = new Network(client, socket, bufferedReader, clientController, adminController);
+                            NetworkDao.getInstance().addServerThread(network);
+                            network.start();
+                            authorization = true;
+                            printWriter.println("Yes");
+                        } else {
+                            printWriter.println("error");
+                        }
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

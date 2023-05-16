@@ -13,7 +13,7 @@
    <children>
       <VBox alignment="CENTER" prefHeight="500.0" prefWidth="850.0">
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Вход" />
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Регистрация" />
             <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
                <children>
                   <TextField fx:id="TextLogin" text="log" />
@@ -24,10 +24,10 @@
                   <PasswordField fx:id="TextPassword" text="pas" />
                </children>
             </HBox>
-            <HBox alignment="CENTER" prefHeight="34.0" prefWidth="850.0">
+            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="850.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#onHelloButtonClick" text="Войти" />
-                  <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onRegisterButtonClick" text="Зарегистрироваться">
+                  <Button mnemonicParsing="false" onAction="#onRegistrationButtonClick" text="Зарегистрироваться" />
+                  <Button mnemonicParsing="false" onAction="#onBackButtonClick" text="Назад">
                      <HBox.margin>
                         <Insets left="5.0" />
                      </HBox.margin>

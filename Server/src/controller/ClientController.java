@@ -198,9 +198,25 @@ public class ClientController {
         }
     }
 
-    public void acceptRequestForClient(String login, String password, int idAnswer) {
+    public void acceptRequestForClient(BufferedReader bufferedReader, String login, String password, int idAuto_service, int idRequest) {
         Client client = new Client(login, password);
-        ClientService.getInstance().acceptRequestForClient(client, idAnswer);
+        ArrayList<Service> services = new ArrayList<>();
+        try {
+            int size = Integer.parseInt(bufferedReader.readLine());
+            for (int i = 0; i < size; i++) {
+                services.add(
+                        new Service(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ClientService.getInstance().acceptRequestForClient(client, idAuto_service, idRequest, services);
     }
 
     public void sendClientMessage(String login, String password, int idChat, String message) {
