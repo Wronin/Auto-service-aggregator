@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class RequestForClient {
     private int id;
@@ -127,8 +128,10 @@ public class RequestForClient {
                 stringBuilder.append(", ");
             }
         }
+
+        String collect = services.stream().map(Service::getName).collect(Collectors.joining(", "));
 //        stringBuilder.deleteCharAt(stringBuilder.length());
 //        stringBuilder.deleteCharAt(stringBuilder.length());
-        return stringBuilder.toString();
+        return collect;
     }
 }

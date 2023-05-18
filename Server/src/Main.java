@@ -15,7 +15,7 @@ public class Main {
         ClientController clientController = new ClientController();
         AdminController adminController = new AdminController();
 
-        try (ServerSocket serverSocket = new ServerSocket(3030)) {
+        try (ServerSocket serverSocket = new ServerSocket(3031)) {
             while (true) {
                 Socket socket = serverSocket.accept();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));

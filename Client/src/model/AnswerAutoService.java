@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class AnswerAutoService {
     private int id;
@@ -103,6 +104,7 @@ public class AnswerAutoService {
                 stringBuilder.append(" ");
             }
         }
-        return stringBuilder.toString();
+        String collect = services.stream().map(Service::getName).collect(Collectors.joining(", "));
+        return collect;
     }
 }

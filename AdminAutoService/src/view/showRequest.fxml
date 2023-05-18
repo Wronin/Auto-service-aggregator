@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ShowRequestController">
+   <children>
+      <VBox prefHeight="600.0" prefWidth="600.0">
+         <children>
+            <Label text="Заявки" />
+            <HBox alignment="CENTER" prefHeight="47.0" prefWidth="600.0">
+               <children>
+                  <ComboBox fx:id="brandComboBox" prefWidth="150.0" />
+                  <ComboBox fx:id="serviceComboBox" prefWidth="150.0" />
+                  <Button mnemonicParsing="false" onAction="#findFilter" text="Поиск" />
+                  <Button mnemonicParsing="false" onAction="#resetFilter" text="Сбросить" />
+               </children>
+            </HBox>
+            <TableView prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn prefWidth="112.79998779296875" text="Бренд" />
+                <TableColumn prefWidth="107.20001220703125" text="Модель" />
+                  <TableColumn prefWidth="192.0" text="Описание" />
+                  <TableColumn prefWidth="188.0" text="Список услуг" />
+              </columns>
+            </TableView>
+            <HBox prefHeight="200.0" prefWidth="600.0">
+               <children>
+                  <VBox prefHeight="200.0" prefWidth="166.0">
+                     <children>
+                        <TableView prefHeight="174.0" prefWidth="180.0">
+                          <columns>
+                            <TableColumn prefWidth="165.60001220703126" text="Услгуи" />
+                          </columns>
+                        </TableView>
+                        <Button mnemonicParsing="false" onAction="#addService" prefHeight="26.0" prefWidth="219.0" text="Добавить" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="168.0">
+                     <children>
+                        <ListView prefHeight="200.0" prefWidth="172.0" />
+                        <Button mnemonicParsing="false" onAction="#acceptRequest" prefHeight="26.0" prefWidth="237.0" text="Откликнуться" />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="200.0" prefWidth="266.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label text="Описание" />
+                              <Label fx:id="descriptionLabel" alignment="TOP_LEFT" prefHeight="101.0" prefWidth="211.0" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="18.0" prefWidth="55.0" text="Услуги" />
+                              <Label fx:id="serviceLabel" alignment="TOP_LEFT" prefHeight="101.0" prefWidth="211.0" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Label text="Ответы" />
+                  <HBox alignment="CENTER" prefHeight="47.0" prefWidth="600.0">
+                     <children>
+                        <ComboBox fx:id="brandComboBox1" prefWidth="150.0" />
+                        <ComboBox fx:id="serviceComboBox1" prefWidth="150.0" />
+                        <Button mnemonicParsing="false" onAction="#findFilterAnswer" text="Поиск" />
+                        <Button mnemonicParsing="false" onAction="#resetFilterAnswer" text="Сбросить" />
+                     </children>
+                  </HBox>
+                  <TableView prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="122.40002745389938" text="Бренд" />
+                      <TableColumn prefWidth="100.0" text="Модель" />
+                        <TableColumn prefWidth="228.7999725341797" text="Список услуг" />
+                        <TableColumn prefWidth="147.20001220703125" text="Статус" />
+                    </columns>
+                  </TableView>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </children>
+</Pane>

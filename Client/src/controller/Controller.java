@@ -30,7 +30,7 @@ public class Controller {
     @FXML
     protected void onHelloButtonClick(ActionEvent e) {
         try {
-            Socket socket = new Socket("localhost", 3030);
+            Socket socket = new Socket("localhost", 3031);
             Client client;
             String content;
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
@@ -61,7 +61,7 @@ public class Controller {
     @FXML
     protected void onRegistrationButtonClick(ActionEvent e) {
         try {
-            Socket socket = new Socket("localhost", 3030);
+            Socket socket = new Socket("localhost", 3031);
             Client client;
             String content;
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);

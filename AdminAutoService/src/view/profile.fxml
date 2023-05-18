@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ProfileController">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="690.0">
+         <children>
+            <HBox alignment="CENTER" prefHeight="28.0" prefWidth="690.0">
+               <children>
+                  <ComboBox prefWidth="150.0" />
+                  <ComboBox prefWidth="150.0" />
+                  <Button mnemonicParsing="false" onAction="#findFilter" prefHeight="26.0" prefWidth="72.0" text="Поиск" />
+                  <Button mnemonicParsing="false" onAction="#resetFilter" prefHeight="26.0" prefWidth="89.0" text="Сбросить" />
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <TableView prefHeight="200.0" prefWidth="200.0">
+              <columns>
+                <TableColumn prefWidth="123.99993741512299" text="Бренд" />
+                <TableColumn prefWidth="120.79999542236328" text="Модель" />
+                  <TableColumn prefWidth="181.5999755859375" text="Название услуги" />
+                  <TableColumn prefWidth="264.8000183105469" text="Описание" />
+              </columns>
+            </TableView>
+            <HBox alignment="TOP_CENTER" prefHeight="28.0" prefWidth="690.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#changeService" prefHeight="26.0" prefWidth="159.0" text="Изменить" />
+                  <Button mnemonicParsing="false" onAction="#deleteService" prefHeight="26.0" prefWidth="160.0" text="Удалить" />
+               </children>
+            </HBox>
+            <HBox prefHeight="99.0" prefWidth="690.0">
+               <children>
+                  <VBox prefHeight="134.0" prefWidth="146.0">
+                     <children>
+                        <Label text="Бренд" />
+                        <TextField />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="134.0" prefWidth="151.0">
+                     <children>
+                        <Label text="Модель" />
+                        <TextField />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="134.0" prefWidth="203.0">
+                     <children>
+                        <Label text="Название услуги" />
+                        <TextField />
+                     </children>
+                  </VBox>
+                  <VBox prefHeight="134.0" prefWidth="190.0">
+                     <children>
+                        <Label text="Описание" />
+                        <TextArea prefHeight="78.0" prefWidth="190.0" />
+                     </children>
+                  </VBox>
+               </children>
+            </HBox>
+            <Button mnemonicParsing="false" onAction="#addService" prefHeight="26.0" prefWidth="706.0" text="Добавить" />
+         </children>
+      </VBox>
+   </children>
+</Pane>
