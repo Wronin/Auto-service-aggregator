@@ -9,9 +9,11 @@ public class ClientDao {
     public static class ClientDaoSingle {
         public static final ClientDao INSTANCE = new ClientDao();
     }
+
     public static ClientDao getInstance() {
         return ClientDaoSingle.INSTANCE;
     }
+
     private Statement statement;
     private ResultSet resultSet;
 
@@ -128,7 +130,8 @@ public class ClientDao {
 
         return cars;
     }
-    public void addRequest(Client client, Request request){
+
+    public void addRequest(Client client, Request request) {
         try {
             int idAuto = 0;
             resultSet = statement.executeQuery(String.format("select " +
@@ -149,9 +152,9 @@ public class ClientDao {
             sql = String.format("insert into Request(`Description`, `auto_id`, `Status`) values('%s', '%d', '%s');", request.getDescription(), idAuto, request.getStatus());
             statement.executeUpdate(sql);
 
-         } catch (Exception e) {
-             e.printStackTrace();
-         }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void addRequestWithServices(Request request) {
@@ -197,6 +200,33 @@ public class ClientDao {
         }
     }
 
+    public void acceptRequestForClient(Client client, int idAuto_service, int idRequest, ArrayList<Service> services) {
+        ArrayList<Integer> serviceIds = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery(String.format("select " +
+                    "service.id " +
+                    "from account " +
+                    "join auto on account.id = auto.account_id " +
+                    "join request on auto.id = request.auto_id " +
+                    "join answer on request.id = answer.request_id " +
+                    "join auto_service on answer.auto_service_id = auto_service.id " +
+                    "left join autoService_service on answer.autoService_service_id = autoService_service.id " +
+                    "left join service on autoService_service.service_id = service.id " +
+                    "where " +
+                    "account.login = '%s' and account.password = '%s' and auto_service.id = '%d' and request.id = '%d';", client.getLogin(), client.getPassword(), idAuto_service, idRequest));
+
+            while (resultSet.next()) {
+                serviceIds.add(resultSet.getInt("service.id"));
+            }
+
+            statement.executeUpdate(String.format("delete from status_service where request_id = '%d';", idRequest));
+            for (Integer id : serviceIds) {
+                statement.executeUpdate(String.format("insert into status_service (`status`, `request_id`, `service_id`) values ('Waiting', '%d', '%d');", idRequest, id));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public ArrayList<Service> getAllServices() {
         ArrayList<Service> services = new ArrayList<>();
 
@@ -215,21 +245,56 @@ public class ClientDao {
         return services;
     }
 
+    public ArrayList<Car> getAllBrands() {
+        ArrayList<Car> brands = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery("select brand.id, brand.name from brand;");
+            while (resultSet.next()) {
+                brands.add(
+                        new Car(
+                                resultSet.getInt("brand.id"),
+                                resultSet.getString("brand.name")
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return brands;
+    }
+
     public ArrayList<RequestForClient> getAllClientRequest(Client client) {
         ArrayList<RequestForClient> requests = new ArrayList<>();
 
         try {
             resultSet = statement.executeQuery(String.format("select " +
-                    "request.id, auto.Reg_number, request.Description, auto_service.name, request.Status " +
+                    "request.id, auto.Reg_number, auto.vin, model.name, brand.name, request.Description, auto_service.name, request.Status " +
                     "from account " +
                     "join auto on account.id = auto.account_id " +
+                    "join model on auto.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
                     "join request on request.auto_id = auto.id " +
                     "left join auto_service on request.auto_service_id = auto_service.id " +
                     "where " +
                     "account.login = '%s' and account.password = '%s';", client.getLogin(), client.getPassword()));
 
             while (resultSet.next()) {
-                requests.add(new RequestForClient(resultSet.getInt("request.id"), resultSet.getString("auto.reg_number"), resultSet.getString("request.description"), resultSet.getString("auto_service.name"), resultSet.getString("request.status"), new ArrayList<>()));
+                requests.add(
+                        new RequestForClient(
+                                resultSet.getInt("request.id"),
+                                new Car(
+                                        resultSet.getString("auto.vin"),
+                                        resultSet.getString("auto.reg_number"),
+                                        resultSet.getString("brand.name"),
+                                        resultSet.getString("model.name")
+
+                                ),
+                                resultSet.getString("request.description"),
+                                resultSet.getString("auto_service.name"),
+                                resultSet.getString("request.status"),
+                                new ArrayList<>()
+                        )
+                );
             }
 
             resultSet = statement.executeQuery(String.format("select " +
@@ -243,7 +308,6 @@ public class ClientDao {
                     "where " +
                     "account.login = '%s' and account.password = '%s';", client.getLogin(), client.getPassword()));
 
-            ArrayList<Service> services = new ArrayList<>();
             while (resultSet.next()) {
                 for (RequestForClient request : requests) {
                     if (request.getId() == resultSet.getInt("request.id")) {
@@ -260,25 +324,90 @@ public class ClientDao {
 
     public ArrayList<AnswerAutoService> getAnswerAutoService(Client client) {
         ArrayList<AnswerAutoService> answers = new ArrayList<>();
-
         try {
             resultSet = statement.executeQuery(String.format("select " +
-                    "answer.id, auto.Reg_number, Auto_service.name, answer.Status " +
-                    "from answer " +
-                    "join request on request.id = answer.request_id " +
-                    "join auto_service on answer.auto_service_id = auto_service.id " +
-                    "join auto on request.auto_id = auto.id " +
-                    "join account on account.id = auto.account_id " +
+                    "auto_service.name, auto_service.id, request.id, answer.id, auto.Reg_number, answer.Status " +
+                    "from account " +
+                    "join auto on account.id = auto.account_id " +
+                    "join model on auto.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
+                    "join request on auto.id = request.auto_id " +
+                    "join answer on request.id = answer.request_id " +
+                    "left join auto_service on answer.auto_service_id = auto_service.id " +
                     "where " +
-                    "account.login = '%s' and account.password = '%s';", client.getLogin(), client.getPassword()));
+                    "account.login = '%s' and account.password = '%s'" +
+                    "group by 3;", client.getLogin(), client.getPassword()));
 
             while (resultSet.next()) {
-                answers.add(new AnswerAutoService(resultSet.getInt("id"), resultSet.getString("reg_number"), resultSet.getString("Name"), resultSet.getString("status")));
+                answers.add(
+                        new AnswerAutoService(
+                                resultSet.getInt("answer.id"),
+                                resultSet.getInt("auto_service.id"),
+                                resultSet.getInt("request.id"),
+                                resultSet.getString("reg_number"),
+                                resultSet.getString("Name"),
+                                resultSet.getString("status")
+                        )
+                );
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return answers;
+    }
+
+    public ArrayList<AnswerAutoService> getAllServicesForAnswerAutoService(Client client) {
+        ArrayList<AnswerAutoService> answer = new ArrayList<>();
+
+        try {
+            resultSet = statement.executeQuery(String.format("select " +
+                    "auto_service.id, auto_service.name, request.id " +
+                    "from account " +
+                    "join auto on account.id = auto.account_id " +
+                    "join request on auto.id = request.auto_id " +
+                    "join answer on request.id = answer.request_id " +
+                    "join auto_service on answer.auto_service_id = auto_service.id " +
+                    "where " +
+                    "account.login = '%s' and account.password = '%s'" +
+                    "group by 3;", client.getLogin(), client.getPassword()));
+            while (resultSet.next()) {
+                answer.add(
+                        new AnswerAutoService(
+                                resultSet.getInt("request.id"),
+                                resultSet.getInt("auto_service.id"),
+                                resultSet.getString("auto_service.name")
+                        )
+                );
+            }
+            for (AnswerAutoService answerAutoService : answer) {
+                resultSet = statement.executeQuery(String.format("select " +
+                                "auto_service.Name, autoService_service.id, service.id, service.name, service.description " +
+                                "from account " +
+                                "join auto on account.id = auto.account_id " +
+                                "join request on auto.id = request.auto_id " +
+                                "join answer on request.id = answer.request_id " +
+                                "join auto_service on answer.auto_service_id = auto_service.id " +
+                                "left join autoService_service on answer.autoService_service_id = autoService_service.id " +
+                                "left join service on autoService_service.service_id = service.id " +
+                                "where " +
+                                "account.login = '%s' and account.password = '%s' and auto_service.id = '%d' and request.id = '%d';",
+                        client.getLogin(), client.getPassword(), answerAutoService.getIdAutoService(), answerAutoService.getIdRequest()));
+                ArrayList<Service> services = new ArrayList<>();
+                while (resultSet.next()) {
+                    services.add(
+                            new Service(
+                                    resultSet.getInt("service.id"),
+                                    resultSet.getString("service.name"),
+                                    resultSet.getString("service.description")
+                            )
+                    );
+                }
+                answerAutoService.setServices(services);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return answer;
     }
 
     public ArrayList<CarService> getCarServices() {
@@ -316,33 +445,31 @@ public class ClientDao {
         return services;
     }
 
-    public void acceptRequestForClient(Client client, int idAnswer) {
+    public ArrayList<Car> getCarBrandFromCarService(int idAutoService) {
+        ArrayList<Car> brands = new ArrayList<>();
         try {
-            int auto_service_id = 0, idRequest = 0, idAuto = 0;
-
             resultSet = statement.executeQuery(String.format("select " +
-                    "answer.id, answer.Request_id, answer.Auto_Service_id, auto.id " +
-                    "from account " +
-                    "join auto on account.id = auto.account_id " +
-                    "join request on auto.id = request.auto_id " +
-                    "join answer on answer.request_id = request.id " +
+                    "brand.id, brand.name " +
+                    "from auto_service " +
+                    "join autoService_service on auto_service.id = autoService_service.auto_service_id " +
+                    "join model on autoService_service.model_id = model.id " +
+                    "join brand on model.brand_id = brand.id " +
                     "where " +
-                    "account.login = '%s' and account.password = '%s';", client.getLogin(), client.getPassword()));
+                    "auto_service.id = '%d' " +
+                    "group by 1;", idAutoService));
 
             while (resultSet.next()) {
-                if (resultSet.getInt("answer.id") == idAnswer) {
-                    idRequest = resultSet.getInt("answer.request_id");
-                    idAuto = resultSet.getInt("auto.id");
-                    auto_service_id = resultSet.getInt("answer.auto_service_id");
-                }
+                brands.add(
+                        new Car(
+                                resultSet.getInt("brand.id"),
+                                resultSet.getString("brand.name")
+                        )
+                );
             }
-
-            String sql = String.format("update request set auto_service_id = '%d', status = " + "'Accept'" + " where (id = '%d' and auto_id = '%d');", auto_service_id, idRequest, idAuto);
-            statement.executeUpdate(sql);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return brands;
     }
 
     public void createChat(Client client, int id) {
@@ -400,7 +527,7 @@ public class ClientDao {
                     id = resultSet.getInt("chat.id");
                 }
             }
-            statement.executeUpdate(String.format("insert into message (`text`, `chat_id`) values ('%s', '%d');", message, id));
+            statement.executeUpdate(String.format("insert into message (`Text`, `chat_id`) values ('%s', '%d');", message, id));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -412,17 +539,16 @@ public class ClientDao {
 
         try {
             resultSet = statement.executeQuery(String.format("select " +
-                    "chat.id, auto.vin, auto.reg_number, brand.name, model.name, auto_service.name " +
-                    "from account " +
-                    "join auto on account.id = auto.account_id " +
-                    "join model on auto.model_id = model.id " +
-                    "join brand on model.brand_id = brand.id " +
-                    "join chat on auto.id = chat.auto_id " +
-                    "join message on chat.id = message.chat_id " +
-                    "join auto_service on chat.auto_service_id = auto_service.id " +
-                    "where " +
-                    "account.login = '%s' and account.password = '%s' " +
-                    "group by 5;", client.getLogin(), client.getPassword())
+                            "chat.id, auto.vin, auto.reg_number, brand.name, model.name, auto_service.name " +
+                            "from account " +
+                            "join auto on account.id = auto.account_id " +
+                            "join model on auto.model_id = model.id " +
+                            "join brand on model.brand_id = brand.id " +
+                            "join chat on auto.id = chat.auto_id " +
+                            "join auto_service on chat.auto_service_id = auto_service.id " +
+                            "where " +
+                            "account.login = '%s' and account.password = '%s';",
+                    client.getLogin(), client.getPassword())
             );
 
             while (resultSet.next()) {
@@ -503,5 +629,26 @@ public class ClientDao {
             e.printStackTrace();
         }
         return chat;
+    }
+
+    public ArrayList<CarService> getCarServicesName() {
+        ArrayList<CarService> carServices = new ArrayList<>();
+        try {
+            resultSet = statement.executeQuery("select " +
+                    "auto_service.id, auto_service.name " +
+                    "from auto_service;");
+
+            while (resultSet.next()) {
+                carServices.add(
+                        new CarService(
+                                resultSet.getInt("auto_service.id"),
+                                resultSet.getString("auto_service.name")
+                        )
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return carServices;
     }
 }

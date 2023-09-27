@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="400.0" prefWidth="690.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ShowRequestController">
+   <children>
+      <HBox prefHeight="400.0" prefWidth="690.0">
+         <children>
+            <VBox prefHeight="400.0" prefWidth="134.0">
+               <children>
+                  <ComboBox fx:id="statusRequestComboBox" prefWidth="150.0" />
+                  <Label text="Заявки" />
+                  <ListView fx:id="requestListView" prefHeight="155.0" prefWidth="130.0" />
+                  <Label text="Ответы" />
+                  <ListView fx:id="answerRequestListView" prefHeight="171.0" prefWidth="130.0" />
+               </children>
+               <HBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="400.0" prefWidth="556.0">
+               <children>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Регистрационный номер">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="regNumLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets top="10.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Вин номер">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="vinLabel" prefHeight="18.0" prefWidth="108.0">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Бренд">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="brandLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Модель">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="modelLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Описание">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="descriptionLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Статус">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="statusLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="18.0" prefWidth="556.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Название автосервиса">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="autoServiceNameLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="158.0" prefWidth="551.0">
+                     <children>
+                        <Label prefHeight="18.0" prefWidth="190.0" text="Услуги">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <Label fx:id="servicesLabel">
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#acceptAnswer" text="Принять" />
+                        <Button mnemonicParsing="false" onAction="#denyAnswer" text="Отказаться" />
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

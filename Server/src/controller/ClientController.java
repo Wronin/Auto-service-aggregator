@@ -11,9 +11,11 @@ public class ClientController {
     public static class ClientControllerSingle {
         public static final ClientController INSTANCE = new ClientController();
     }
+
     public static ClientController getInstance() {
         return ClientControllerSingle.INSTANCE;
     }
+
     public void addCar(String login, String password, String brand, String model, String VINNumber, String regNumber) {
         Client client = new Client(login, password);
         ClientService.getInstance().addCar(client, brand, model, VINNumber, regNumber);
@@ -38,10 +40,10 @@ public class ClientController {
 
         try {
             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            printWriter.println(car.getBrand());
-            printWriter.println(car.getModel());
             printWriter.println(car.getVINNumber());
             printWriter.println(car.getRegNumber());
+            printWriter.println(car.getBrand());
+            printWriter.println(car.getModel());
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -121,7 +123,10 @@ public class ClientController {
 
             for (var request : requests) {
                 printWriter.println(request.getId());
-                printWriter.println(request.getRegNumber());
+                printWriter.println(request.getCar().getVINNumber());
+                printWriter.println(request.getCar().getRegNumber());
+                printWriter.println(request.getCar().getBrand());
+                printWriter.println(request.getCar().getModel());
                 printWriter.println(request.getDescription());
                 printWriter.println(request.getName());
                 printWriter.println(request.getStatus());
@@ -149,9 +154,17 @@ public class ClientController {
             printWriter.println(answers.size());
             for (var request : answers) {
                 printWriter.println(request.getId());
+                printWriter.println(request.getIdAutoService());
+                printWriter.println(request.getIdRequest());
                 printWriter.println(request.getRegNumber());
                 printWriter.println(request.getName());
                 printWriter.println(request.getStatus());
+                printWriter.println(request.getServices().size());
+                for (Service service : request.getServices()) {
+                    printWriter.println(service.getId());
+                    printWriter.println(service.getName());
+                    printWriter.println(service.getDescription());
+                }
             }
 
         } catch (Exception e) {
@@ -168,14 +181,42 @@ public class ClientController {
             printWriter.println(carService.getName());
             printWriter.println(carService.getSpecification());
 
+            printWriter.println(carService.getServices().size());
+            for (Service service : carService.getServices()) {
+                printWriter.println(service.getId());
+                printWriter.println(service.getName());
+                printWriter.println(service.getDescription());
+            }
+
+            printWriter.println(carService.getBrands().size());
+            for (Car brand : carService.getBrands()) {
+                printWriter.println(brand.getBrand());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void acceptRequestForClient(String login, String password, int idAnswer) {
+    public void acceptRequestForClient(BufferedReader bufferedReader, String login, String password, int idAuto_service, int idRequest) {
         Client client = new Client(login, password);
-        ClientService.getInstance().acceptRequestForClient(client, idAnswer);
+        ArrayList<Service> services = new ArrayList<>();
+        try {
+            int size = Integer.parseInt(bufferedReader.readLine());
+            for (int i = 0; i < size; i++) {
+                services.add(
+                        new Service(
+                                Integer.parseInt(bufferedReader.readLine()),
+                                bufferedReader.readLine(),
+                                bufferedReader.readLine()
+                        )
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ClientService.getInstance().acceptRequestForClient(client, idAuto_service, idRequest, services);
     }
 
     public void sendClientMessage(String login, String password, int idChat, String message) {
@@ -206,7 +247,7 @@ public class ClientController {
 
     }
 
-    public void getCurrentChatForClient(Socket socket ,String login, String password, int idChat) {
+    public void getCurrentChatForClient(Socket socket, String login, String password, int idChat) {
         Client client = new Client(login, password);
         Chat chat = ClientService.getInstance().getCurrentChatForClient(client, idChat);
 
@@ -224,7 +265,84 @@ public class ClientController {
             for (Message message : chat.getMessages()) {
                 printWriter.println(message.getMessage());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void getCarServices(Socket socket) {
+        ArrayList<CarService> carServices = ClientService.getInstance().getCarServices();
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+            printWriter.println(carServices.size());
+
+            for (CarService carService : carServices) {
+                printWriter.println(carService.getId());
+                printWriter.println(carService.getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getAllServices(Socket socket) {
+        ArrayList<Service> services = ClientService.getInstance().getAllServices();
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(services.size());
+            for (Service service : services) {
+                printWriter.println(service.getId());
+                printWriter.println(service.getName());
+                printWriter.println(service.getDescription());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getAllBrands(Socket socket) {
+        ArrayList<Car> brands = ClientService.getInstance().getAllBrands();
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(brands.size());
+            for (Car car : brands) {
+                printWriter.println(car.getId());
+                printWriter.println(car.getBrand());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void getSearchResult(Socket socket, String brandName, int idService) {
+        ArrayList<CarService> carServices = ClientService.getInstance().getSearchResult(brandName, idService);
+
+        try {
+            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+
+            printWriter.println(carServices.size());
+            for (CarService carService : carServices) {
+                printWriter.println(carService.getId());
+                printWriter.println(carService.getName());
+                printWriter.println(carService.getSpecification());
+
+                printWriter.println(carService.getServices().size());
+                for (Service service : carService.getServices()) {
+                    printWriter.println(service.getId());
+                    printWriter.println(service.getName());
+                    printWriter.println(service.getDescription());
+                }
+
+                printWriter.println(carService.getBrands().size());
+                for (Car brand : carService.getBrands()) {
+                    printWriter.println(brand.getBrand());
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -10,6 +10,12 @@ public class Service {
         this.name = name;
         this.description = description;
     }
+
+    public Service(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     public Service(int id) {
         this.id = id;
     }

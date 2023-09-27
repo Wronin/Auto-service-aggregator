@@ -8,12 +8,18 @@ public class CarService {
     private String name;
     private String specification;
     private ArrayList<Service> services;
+    private ArrayList<Car> brands;
 
     public CarService(int id, String name, String specification, ArrayList<Service> services) {
         this.id = id;
         this.name = name;
         this.specification = specification;
         this.services = services;
+    }
+
+    public CarService(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public CarService(String name, String specification, ArrayList<Service> services) {
@@ -60,5 +66,13 @@ public class CarService {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public ArrayList<Car> getBrands() {
+        return brands;
+    }
+
+    public void setBrands(ArrayList<Car> brands) {
+        this.brands = brands;
     }
 }

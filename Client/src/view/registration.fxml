@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+   <children>
+      <VBox alignment="CENTER" prefHeight="500.0" prefWidth="850.0">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Регистрация" />
+            <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
+               <children>
+                  <TextField fx:id="TextLogin" text="log" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="46.0" prefWidth="600.0">
+               <children>
+                  <PasswordField fx:id="TextPassword" text="pas" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="850.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#onRegistrationButtonClick" text="Зарегистрироваться" />
+                  <Button mnemonicParsing="false" onAction="#onBackButtonClick" text="Назад">
+                     <HBox.margin>
+                        <Insets left="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <Label fx:id="error" />
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

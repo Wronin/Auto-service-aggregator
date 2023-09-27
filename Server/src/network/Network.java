@@ -142,9 +142,25 @@ public class Network extends Thread {
                             jsonObject.getInteger("id")
                     );
                     case "acceptRequestForClient" -> ClientController.getInstance().acceptRequestForClient(
+                            bufferedReader,
                             (String) jsonObject.get("login"),
                             (String) jsonObject.get("password"),
-                            jsonObject.getInteger("idAnswer")
+                            jsonObject.getInteger("idAuto_service"),
+                            jsonObject.getInteger("idRequest")
+                    );
+                    case "getCarServices" -> ClientController.getInstance().getCarServices(
+                            socket
+                    );
+                    case "getAllServices" -> ClientController.getInstance().getAllServices(
+                            socket
+                    );
+                    case "getAllBrands" -> ClientController.getInstance().getAllBrands(
+                            socket
+                    );
+                    case "getSearchResult" -> ClientController.getInstance().getSearchResult(
+                            socket,
+                            (String) jsonObject.get("brandName"),
+                            jsonObject.getInteger("idService")
                     );
                     case "getRequests" -> AdminController.getInstance().getRequests(
                             socket,

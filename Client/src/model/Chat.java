@@ -1,5 +1,6 @@
 package model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Chat {
@@ -47,5 +48,21 @@ public class Chat {
 
     public ArrayList<Message> getMessages() {
         return messages;
+    }
+
+    public int getCurrentId(String line, Chat chat) {
+        String[] split = line.split("\n");
+        if (chat.car.getRegNumber().equals(split[0]) && chat.getCarServiceName().equals(split[1])) {
+            return chat.getId();
+        }
+        return 0;
+    }
+
+    public String getMessagesToString(ArrayList<Message> messages) {
+        StringBuilder message = new StringBuilder();
+        for (Message mess : messages) {
+            message.append(String.format("%s\n", mess.getMessage()));
+        }
+        return message.toString();
     }
 }

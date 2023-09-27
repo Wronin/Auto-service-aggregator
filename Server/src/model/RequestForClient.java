@@ -4,36 +4,70 @@ import java.util.ArrayList;
 
 public class RequestForClient {
     private int id;
-    private String regNumber;
+    private int idAutoService;
+    private int idRequest;
+    private Car car;
     private String description;
     private String name;
     private String status;
     private ArrayList<Service> services;
 
-    public RequestForClient(String regNumber, String description, String status) {
-        this.regNumber = regNumber;
+    public RequestForClient(Car car, String description, String status) {
+        this.car = car;
         this.description = description;
         this.status = status;
     }
 
-    public RequestForClient(int id, String regNumber, String description, String name, String status, ArrayList<Service> services) {
+    public RequestForClient(int idRequest, int idAutoService, String name) {
+        this.idRequest = idRequest;
+        this.idAutoService = idAutoService;
+        this.name = name;
+    }
+
+    public RequestForClient(int id, int idAutoService, int idRequest, Car car, String name, String status) {
         this.id = id;
-        this.regNumber = regNumber;
+        this.idAutoService = idAutoService;
+        this.idRequest = idRequest;
+        this.car = car;
+        this.name = name;
+        this.status = status;
+    }
+
+    public RequestForClient(int id, Car car, String description, String name, String status, ArrayList<Service> services) {
+        this.id = id;
+        this.car = car;
         this.description = description;
         this.name = name;
         this.status = status;
         this.services = services;
     }
 
-    public RequestForClient(int id, String regNumber, String description, String name, String status) {
+
+    public RequestForClient(int id, Car car, String description, String name, String status) {
         this.id = id;
-        this.regNumber = regNumber;
+        this.car = car;
         this.description = description;
         this.name = name;
         this.status = status;
     }
 
     public RequestForClient() {
+    }
+
+    public int getIdAutoService() {
+        return idAutoService;
+    }
+
+    public int getIdRequest() {
+        return idRequest;
+    }
+
+    public void setIdAutoService(int idAutoService) {
+        this.idAutoService = idAutoService;
+    }
+
+    public void setIdRequest(int idRequest) {
+        this.idRequest = idRequest;
     }
 
     public void addService(Service service) {
@@ -47,12 +81,12 @@ public class RequestForClient {
         this.id = id;
     }
 
-    public String getRegNumber() {
-        return regNumber;
+    public void setCar(Car car) {
+        this.car = car;
     }
 
-    public void setRegNumber(String regNumber) {
-        this.regNumber = regNumber;
+    public Car getCar() {
+        return car;
     }
 
     public String getDescription() {

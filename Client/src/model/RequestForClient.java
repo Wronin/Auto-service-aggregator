@@ -1,35 +1,41 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class RequestForClient {
     private int id;
+    private int idAutoService;
+    private int idRequest;
     private String regNumber;
+    private Car car;
     private String description;
-    private String name;
+    private String carServiceName;
     private String status;
     private ArrayList<Service> services;
 
-    public RequestForClient(int id, String regNumber, String description, String name, String status, ArrayList<Service> services) {
+    public RequestForClient(int id, Car car, String description, String carServiceName, String status, ArrayList<Service> services) {
         this.id = id;
-        this.regNumber = regNumber;
+        this.car = car;
         this.description = description;
-        this.name = name;
+        this.carServiceName = carServiceName;
         this.status = status;
         this.services = services;
     }
-
-    public RequestForClient(String regNumber, String description, String status) {
+    public RequestForClient(int id, int idAutoService, int idRequest, String regNumber, String name, String status) {
+        this.id = id;
+        this.idAutoService = idAutoService;
+        this.idRequest = idRequest;
         this.regNumber = regNumber;
-        this.description = description;
+        this.carServiceName = name;
         this.status = status;
     }
 
-    public RequestForClient(int id, String regNumber, String description, String name, String status) {
+    public RequestForClient(int id, Car car, String description, String carServiceName, String status) {
         this.id = id;
-        this.regNumber = regNumber;
+        this.car = car;
         this.description = description;
-        this.name = name;
+        this.carServiceName = carServiceName;
         this.status = status;
     }
 
@@ -40,6 +46,30 @@ public class RequestForClient {
     public RequestForClient() {
     }
 
+    public int getIdAutoService() {
+        return idAutoService;
+    }
+
+    public int getIdRequest() {
+        return idRequest;
+    }
+
+    public String getRegNumber() {
+        return regNumber;
+    }
+
+    public void setIdAutoService(int idAutoService) {
+        this.idAutoService = idAutoService;
+    }
+
+    public void setIdRequest(int idRequest) {
+        this.idRequest = idRequest;
+    }
+
+    public void setRegNumber(String regNumber) {
+        this.regNumber = regNumber;
+    }
+
     public int getId() {
         return id;
     }
@@ -48,12 +78,12 @@ public class RequestForClient {
         this.id = id;
     }
 
-    public String getRegNumber() {
-        return regNumber;
+    public Car getCar() {
+        return car;
     }
 
-    public void setRegNumber(String regNumber) {
-        this.regNumber = regNumber;
+    public void setCar(Car car) {
+        this.car = car;
     }
 
     public String getDescription() {
@@ -64,12 +94,14 @@ public class RequestForClient {
         this.description = description;
     }
 
-    public String getName() {
-        return name;
+    public String getCarServiceName() {
+        if (!carServiceName.equals("null"))
+            return carServiceName;
+        else return "";
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCarServiceName(String carServiceName) {
+        this.carServiceName = carServiceName;
     }
 
     public String getStatus() {
@@ -86,5 +118,20 @@ public class RequestForClient {
 
     public void setServices(ArrayList<Service> services) {
         this.services = services;
+    }
+
+    public String getServicesFromArray() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Service service : services) {
+            if (!service.getName().equals("null")) {
+                stringBuilder.append(service.getName());
+                stringBuilder.append(", ");
+            }
+        }
+
+        String collect = services.stream().map(Service::getName).collect(Collectors.joining(", "));
+//        stringBuilder.deleteCharAt(stringBuilder.length());
+//        stringBuilder.deleteCharAt(stringBuilder.length());
+        return collect;
     }
 }
